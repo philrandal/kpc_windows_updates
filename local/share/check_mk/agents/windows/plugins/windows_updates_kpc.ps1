@@ -37,9 +37,85 @@ $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
 $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
 
 if ($Updates.Updates -and $Updates.Updates.count -gt 0){
-    $count=$Updates.Updates.count
-    $Updates | Select Title, IsMandatory
-    #$Updates | Select-Object Title, MsrcSeverity
+
+$Mandatorycount=0
+$Optionalcount=0
+$Criticalcount=0
+$Importantcount=0
+$Lowcount=0
+$Moderatecount=0
+$Unspecifiedcount=0
+
+foreach ($Update in $Updates)
+    {
+        if ($Update.IsMandatory -eq 1){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Mandatorycount++
+        }
+        if ($Update.IsMandatory -eq 0){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Optionalcount++
+        }
+        if ($Update.MsrcSeverity -eq "Critical"){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Criticalcount++
+        }
+        if ($Update.MsrcSeverity -eq "Important"){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Importantcount++
+        }
+        if ($Update.MsrcSeverity -eq "Low"){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Lowcount++
+        }
+        if ($Update.MsrcSeverity -eq "Moderate"){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Moderatecount++
+        }
+        if ($Update.MsrcSeverity -eq $null){
+        $jobName = $Update.Title
+        $jobID = $Update.IsMandatory
+        $lastResult = $Update.IsHidden
+        $lastState = $Update.IsInstalled
+        write-host "$jobName|$jobID|$lastResult|$lastState"
+        $Unspecifiedcount++
+        }
+    }
+write-host $Mandatorycount
+write-host $Optionalcount
+write-host $Criticalcount
+write-host $Importantcount
+write-host $Lowcount
+write-host $Moderatecount
+write-host $Unspecifiedcount
+
+
+    #$Updates | Select Title, IsMandatory, IsHidden, IsInstalled
+    #$Updates | Select-Object Title, MsrcSeverity, IsHidden
 }
 else { Write-Output "No updates found. Exiting..." }
 
