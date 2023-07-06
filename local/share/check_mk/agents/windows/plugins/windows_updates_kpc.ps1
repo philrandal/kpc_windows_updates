@@ -32,27 +32,62 @@ $pswindow.buffersize = $newsize
 
 try
 {
+    #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
+    $lastupdatelist=""
+
+
+    $lastupdateinstalldate=@{}
+    $Session = New-Object -ComObject Microsoft.Update.Session
+    $Searcher = $Session.CreateUpdateSearcher()
+    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
+    $updatehistory = $Searcher.QueryHistory(1,50)
+
+    if ($updatehistory -and $updatehistory.count -gt 0)
+    {
+    
+        foreach ($lastupdate in $updatehistory)
+        {
+            $lastupdatelist = $lastupdatelist + $lastupdate.Date + $lastupdate.Title + "XXXNEWLINEXXX"
+        }
+    }
+
+    if ($lastupdateinstalldate)
+    {
+        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+    }
+    else
+    {
+        $lastupdateinstalldate = Get-Date "01/01/1970"
+        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+    }
+    $lastupdatelist = $lastupdatelist -replace "`n|`r"
+    $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9)>>>`n"
+    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
+    write-host "$outputlastupdateinstalldate"
+    
+
+    #Checking for available Windows Updates
+    $Mandatorycount=0
+    $Mandatoryupdates=""
+    $Optionalcount=0
+    $Optionalupdates=""
+    $Criticalcount=0
+    $Criticalupdates=""
+    $Importantcount=0
+    $Importantupdates=""
+    $Lowcount=0
+    $Lowupdates=""
+    $Moderatecount=0
+    $Moderateupdates=""
+    $Unspecifiedcount=0
+    $Unspecifiedupdates=""
+
+
     $UpdateSession = New-Object -ComObject Microsoft.Update.Session
     $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
     $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
-
     if ($Updates -and $Updates.count -gt 0)
     {
-
-        $Mandatorycount=0
-        $Mandatoryupdates=""
-        $Optionalcount=0
-        $Optionalupdates=""
-        $Criticalcount=0
-        $Criticalupdates=""
-        $Importantcount=0
-        $Importantupdates=""
-        $Lowcount=0
-        $Lowupdates=""
-        $Moderatecount=0
-        $Moderateupdates=""
-        $Unspecifiedcount=0
-        $Unspecifiedupdates=""
     
         foreach ($Update in $Updates)
         {
@@ -95,12 +130,12 @@ try
                 $Unspecifiedcount++
             }
         }
-    $output = "<<<windows_updates_kpc:sep(9)>>>`n"
-    $output = "$output" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
-    write-host $output
+
 
 }
-
+    $outputwindowsupdates = "<<<windows_updates_kpc:sep(9)>>>`n"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    write-host $outputwindowsupdates
 }
 catch
 {
