@@ -95,7 +95,7 @@ try
                 $Unspecifiedcount++
             }
         }
-    $output = "<<<windows_updates_kpc:sep(15)>>>`n"
+    $output = "<<<windows_updates_kpc:sep(9)>>>`n"
     $output = "$output" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     write-host $output
 
