@@ -47,7 +47,7 @@ try
     
         foreach ($lastupdate in $updatehistory)
         {
-            $lastupdatelist = $lastupdatelist + $lastupdate.Date + $lastupdate.Title + "XXXNEWLINEXXX"
+            $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
         }
     }
 
