@@ -92,12 +92,11 @@ try
                 $Unspecifiedcount++
             }
         }
-
-    $output = $Mandatorycount.ToString() + "`t" + $Optionalcount.ToString() + "`t" + $Criticalcount.ToString() + "`t" + $Importantcount.ToString() + "`t" + $Lowcount.ToString() + "`t" + $Moderatecount.ToString() + "`t" + $Unspecifiedcount.ToString() + "`t" + $Mandatoryupdates.ToString() + "`t" + $Optionalupdates.ToString() + "`t" + $Criticalupdates.ToString() + "`t" + $Importantupdates.ToString() + "`t" + $Lowupdates.ToString() + "`t" + $Moderateupdates.ToString() + "`t" + $Unspecifiedupdates.ToString()
+    $output = "<<<windows_updates_kpc:sep(15)>>>`n"
+    $output = "$output" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     write-host $output
 
 }
-else { Write-Output "No updates found. Exiting..." }
 
 }
 catch
