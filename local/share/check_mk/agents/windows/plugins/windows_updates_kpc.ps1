@@ -56,39 +56,42 @@ try
     
         foreach ($Update in $Updates)
         {
+            $Updatetitle = $Update.Title
+            $Updatetitle = $Updatetitle -replace "`n|`r"
+
             if ($Update.IsMandatory -eq 1)
             {
-                $Mandatoryupdates = $Mandatoryupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Mandatoryupdates = $Mandatoryupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Mandatorycount++
             }
             if ($Update.IsMandatory -eq 0)
             {
-                $Optionalupdates = $Optionalupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Optionalcount++
             }
             if ($Update.MsrcSeverity -eq "Critical")
             {
-                $Criticalupdates = $Criticalupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Criticalupdates = $Criticalupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Criticalcount++
             }
             if ($Update.MsrcSeverity -eq "Important")
             {
-                $Importantupdates = $Importantupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Importantupdates = $Importantupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Importantcount++
             }
             if ($Update.MsrcSeverity -eq "Low")
             {
-                $Lowupdates = $Lowupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Lowupdates = $Lowupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Lowcount++
             }
             if ($Update.MsrcSeverity -eq "Moderate")
             {
-                $Moderateupdates = $Moderateupdates + $Update.Title  + "XXXNEWLINEXXX"
+                $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
                 $Moderatecount++
             }
             if ($Update.MsrcSeverity -eq $null)
             {
-                $Unspecifiedupdates = $Unspecifiedupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Unspecifiedcount++
             }
         }
