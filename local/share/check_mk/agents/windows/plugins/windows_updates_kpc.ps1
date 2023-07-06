@@ -32,69 +32,70 @@ $pswindow.buffersize = $newsize
 
 try
 {
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateupdateSearcher()
-$Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
+    $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+    $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
+    $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
 
-if ($Updates -and $Updates.count -gt 0){
-
-$Mandatorycount=0
-$Optionalcount=0
-$Criticalcount=0
-$Importantcount=0
-$Lowcount=0
-$Moderatecount=0
-$Unspecifiedcount=0
-
-foreach ($Update in $Updates)
+    if ($Updates -and $Updates.count -gt 0)
     {
+
+        $Mandatorycount=0
+        $Mandatoryupdates=""
+        $Optionalcount=0
+        $Optionalupdates=""
+        $Criticalcount=0
+        $Criticalupdates=""
+        $Importantcount=0
+        $Importantupdates=""
+        $Lowcount=0
+        $Lowupdates=""
+        $Moderatecount=0
+        $Moderateupdates=""
+        $Unspecifiedcount=0
+        $Unspecifiedupdates=""
     
-        $jobName = $Update.Title
-        $jobID = $Update.IsMandatory
-        $lastResult = $Update.IsHidden
-        $lastState = $Update.IsInstalled
-        $MsrcSeverity = $Update.MsrcSeverity
+        foreach ($Update in $Updates)
+        {
+            if ($Update.IsMandatory -eq 1)
+            {
+                $Mandatoryupdates = $Mandatoryupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Mandatorycount++
+            }
+            if ($Update.IsMandatory -eq 0)
+            {
+                $Optionalupdates = $Optionalupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Optionalcount++
+            }
+            if ($Update.MsrcSeverity -eq "Critical")
+            {
+                $Criticalupdates = $Criticalupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Criticalcount++
+            }
+            if ($Update.MsrcSeverity -eq "Important")
+            {
+                $Importantupdates = $Importantupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Importantcount++
+            }
+            if ($Update.MsrcSeverity -eq "Low")
+            {
+                $Lowupdates = $Lowupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Lowcount++
+            }
+            if ($Update.MsrcSeverity -eq "Moderate")
+            {
+                $Moderateupdates = $Moderateupdates + $Update.Title  + "XXXNEWLINEXXX"
+                $Moderatecount++
+            }
+            if ($Update.MsrcSeverity -eq $null)
+            {
+                $Unspecifiedupdates = $Unspecifiedupdates + $Update.Title + "XXXNEWLINEXXX"
+                $Unspecifiedcount++
+            }
+        }
 
-        if ($Update.IsMandatory -eq 1){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Mandatorycount++
-        }
-        if ($Update.IsMandatory -eq 0){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Optionalcount++
-        }
-        if ($Update.MsrcSeverity -eq "Critical"){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Criticalcount++
-        }
-        if ($Update.MsrcSeverity -eq "Important"){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Importantcount++
-        }
-        if ($Update.MsrcSeverity -eq "Low"){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Lowcount++
-        }
-        if ($Update.MsrcSeverity -eq "Moderate"){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Moderatecount++
-        }
-        if ($Update.MsrcSeverity -eq $null){
-        write-host "$jobName|$jobID|$lastResult|$lastState|$MsrcSeverity"
-        $Unspecifiedcount++
-        }
-    }
-write-host $Mandatorycount
-write-host $Optionalcount
-write-host $Criticalcount
-write-host $Importantcount
-write-host $Lowcount
-write-host $Moderatecount
-write-host $Unspecifiedcount
+    $output = $Mandatorycount.ToString() + "`t" + $Optionalcount.ToString() + "`t" + $Criticalcount.ToString() + "`t" + $Importantcount.ToString() + "`t" + $Lowcount.ToString() + "`t" + $Moderatecount.ToString() + "`t" + $Unspecifiedcount.ToString() + "`t" + $Mandatoryupdates + "`t" + $Optionalupdates + "`t" + $Criticalupdates + "`t" + $Importantupdates + "`t" + $Lowupdates + "`t" + $Moderateupdates + "`t" + $Unspecifiedupdates
+    write-host $output
 
-
-    #$Updates | Select Title, IsMandatory, IsHidden, IsInstalled
-    #$Updates | Select-Object Title, MsrcSeverity, IsHidden
 }
 else { Write-Output "No updates found. Exiting..." }
 
