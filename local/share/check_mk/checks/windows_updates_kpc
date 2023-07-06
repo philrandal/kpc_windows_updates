@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Copyright (C) 2019 tribe29 GmbH - License: GNU General Public License v2
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
@@ -27,16 +27,9 @@
 
 
 
-# <<<veeam_jobs_kpc:sep(9) >>>
-# BACKUP_RIS      Backup  Stopped Success BACKUPLOGS...................................... 27.10.2013 22:00:17     27.10.2013 22:06:12   COMPUTERNAME
-# BACKUP_R43-local_HXWH44 Backup  Stopped Success BACKUPLOGS...................................... 26.10.2013 18:00:20     26.10.2013 18:46:03   COMPUTERNAME
-# BACKUP_R43-Pool4_HXWH44 Backup  Stopped Failed BACKUPLOGS......................................  26.10.2013 23:13:13     27.10.2013 00:51:17   COMPUTERNAME
-# BACKUP_R43-Pool3_HXWH44 Backup  Stopped Failed BACKUPLOGS......................................  27.10.2013 02:59:29     27.10.2013 08:59:51   COMPUTERNAME
-# REPL_KNESXIDMZ  Replica Stopped Success BACKUPLOGS...................................... 27.10.2013 44:00:01     27.10.2013 44:44:26   COMPUTERNAME
-# BACKUP_KNESXI   Backup  Stopped Success BACKUPLOGS...................................... 28.10.2013 05:00:04     28.10.2013 05:32:15   COMPUTERNAME
-# BACKUP_KNESXit  Backup  Stopped Success BACKUPLOGS...................................... 26.10.2013 22:30:02     27.10.2013 02:37:30   COMPUTERNAME
-# BACKUP_R43-Pool5_HXWH44 Backup  Stopped Success BACKUPLOGS...................................... 27.10.2013 23:00:00     27.10.2013 23:04:53   COMPUTERNAME
-# BACKUP_R43-Pool2_HXWH44 Backup  Stopped Failed BACKUPLOGS......................................  27.10.2013 02:37:45     27.10.2013 02:45:35   COMPUTERNAME
+#<<<windows_updates_kpc:sep(15)>>>
+#0	9	0	0	0	0	9		Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX					Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX
+
 
 support = "For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
 
@@ -182,5 +175,5 @@ def check_windows_updates_kpc(item, _no_params, info):
 check_info["windows_updates_kpc"] = {
     "check_function": check_windows_updates_kpc,
     "inventory_function": inventory_windows_updates_kpc,
-    "service_description": "Windows Updates %s",
+    "service_description": "Windows Updates KPC",
 }
