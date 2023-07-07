@@ -40,14 +40,17 @@ try
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
     $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(1,50)
+    $updatehistory = $Searcher.QueryHistory(1,500)
 
     if ($updatehistory -and $updatehistory.count -gt 0)
     {
     
         foreach ($lastupdate in $updatehistory)
         {
-            $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+            if ($lastupdate.Date -and $lastupdate.Title)
+            {
+                $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+            }
         }
     }
 
@@ -62,7 +65,8 @@ try
     }
     $lastupdatelist = $lastupdatelist -replace "`n|`r"
     $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9)>>>`n"
-    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
+    $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
+    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
     write-host "$outputlastupdateinstalldate"
     
 
@@ -134,7 +138,8 @@ try
 
 }
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9)>>>`n"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $jobname_windows_updates_kpc = "Windows Updates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     write-host $outputwindowsupdates
 }
 catch
