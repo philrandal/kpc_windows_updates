@@ -53,126 +53,31 @@ def inventory_windows_lastupdateinstalldate_kpc(info):
     return [(x[0], None) for x in info]
 
 
-#Linux Homepath of OMD User
-homepath = os.path.expanduser('~')
-
-
 def check_windows_lastupdateinstalldate_kpc(item, _no_params, info):
 
     for line in info:
-        if len(line) < 8:
+        if len(line) < 3:
             continue  # Skip incomplete lines
 
-        job_name, job_type, job_last_state, job_last_result, job_failed_backup_info, job_creation_time, job_end_time, computername = line[
-            :8
+        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdatelist = line[
+            :3
         ]
 
-        #This is the Folder Config Part, where CheckMK should store all Files
-        path = homepath + "/kpcchecks/veeam_jobs_kpc/" + str(computername) + "/"
-
-        #Create Folder if not Exits
-        if not os.path.exists(path):
-             os.makedirs(path)
-        
-
-        #Full Path of the State File:
-        statefilefullpath = path + job_name + ".json"
-
-        #We create Json Files with the last States if the Job is not running. We will use the Values if the Job is Running, to Show the Last Finished state in CheckMK
-        if job_last_state not in ["Working", "Postprocessing"]:
-
-             fileoutput = {
-                 "job_name": job_name,
-                 "job_type": job_type,
-                 "job_last_state": job_last_state,
-                 "job_last_result": job_last_result,
-                 "job_failed_backup_info": job_failed_backup_info,
-                 "job_creation_time": job_creation_time,
-                 "job_end_time": job_end_time,
-                 "computername": computername
-             }
-        
-             #Write Results into Json File for Each Service, so we can track last "OK" State with the Timestamp. If the CRC Counter goes up, we know, that we have to do an CRIT Error Message
-             json_object = json.dumps(fileoutput, indent=4)
-             statefile = open(statefilefullpath, "w")
-             statefile.write(json_object)
-             statefile.close()
 
 
-        
-        #Load Last Backup State if available
-        file_exists = os.path.exists(statefilefullpath)
-        if file_exists is True:
-             with open(statefilefullpath) as json_file:
-                  laststate = json.load(json_file)
-             laststate['job_failed_backup_info'] = laststate['job_failed_backup_info'].replace("XXXNEWLINEXXX", "\n")
-             laststate['job_failed_backup_info'] = "\n" + laststate['job_failed_backup_info'] + "\n \n \n" + support
-
-
-        job_failed_backup_info = job_failed_backup_info.replace("XXXNEWLINEXXX", "\n")
-        job_failed_backup_info = "\n" + job_failed_backup_info + "\n \n \n" + support
-        if job_name != item:
+        lastupdatelist = lastupdatelist .replace("XXXNEWLINEXXX", "\n")
+        lastupdatelist = "\n" + lastupdatelist + "\n \n \n" + support
+        if jobname_windows_lastupdateinstalldate_kpc != item:
             continue  # Skip not matching lines
 
-        #If there is no last state available when a job is running use this
-        if job_last_state in ["Working", "Postprocessing"] and file_exists is False:
-            return 0, "Running since %s (current state is: %s)" % (
-                job_creation_time,
-                job_last_state,
-            )
-        #if there is a last state available when a job is running use this
-        if job_last_state in ["Working", "Postprocessing"] and laststate: 
-             if laststate['job_last_result'] == "Success":
-                 state = 0
-             elif laststate['job_last_state'] == "Idle" and laststate['job_type'] == "BackupSync":
-                # A sync job is always idle
-                 state = 0
-             elif laststate['job_last_result'] == "Failed":
-                 state = 2
-             elif laststate['job_last_state'] == "Stopped" and laststate['job_last_result'] == "Warning":
-                 state = 1
-             else:
-                 state = 3
-
-             return state, "Running since %s (current state is: %s) \n \n Last State: %s, Last Result: %s, Creation time: %s, End time: %s, Type: %s %s" % (
-                 job_creation_time,
-                 job_last_state,
-                 laststate['job_last_state'],
-                 laststate['job_last_result'],
-                 laststate['job_creation_time'],
-                 laststate['job_end_time'],
-                 laststate['job_type'],
-                 laststate['job_failed_backup_info'],
-             )
-
-
-
-       
-
-        if job_last_result == "Success":
-            state = 0
-        elif job_last_state == "Idle" and job_type == "BackupSync":
-            # A sync job is always idle
-            state = 0
-        elif job_last_result == "Failed":
-            state = 2
-        elif job_last_state == "Stopped" and job_last_result == "Warning":
-            state = 1
-        else:
-            state = 3
-
-        return state, "State: %s, Result: %s, Creation time: %s, End time: %s, Type: %s %s" % (
-            job_last_state,
-            job_last_result,
-            job_creation_time,
-            job_end_time,
-            job_type,
-            job_failed_backup_info,
+        return 0, "Running since %s (current state is: %s)" % (
+             lastupdateinstalldate,
+             lastupdatelist,
         )
 
 
 check_info["windows_lastupdateinstalldate_kpc"] = {
     "check_function": check_windows_lastupdateinstalldate_kpc,
     "inventory_function": inventory_windows_lastupdateinstalldate_kpc,
-    "service_description": "Windows Update History KPC",
+    "service_description": "KPC %s",
 }
