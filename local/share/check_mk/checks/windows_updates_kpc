@@ -1,7 +1,3 @@
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
@@ -25,155 +21,128 @@
 #
 ################################################################################################################
 
+$pshost = get-host
+$pswindow = $pshost.ui.rawui
+
+$newsize = $pswindow.buffersize
+$newsize.height = 300
+$newsize.width = 150
+$pswindow.buffersize = $newsize
 
 
-#<<<windows_updates_kpc:sep(9)>>>
-#0	9	0	0	0	0	9		Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX					Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX
+try
+{
+    #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
+    $lastupdatelist=""
 
 
-support = "For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
+    $lastupdateinstalldate=@{}
+    $Session = New-Object -ComObject Microsoft.Update.Session
+    $Searcher = $Session.CreateUpdateSearcher()
+    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
+    $updatehistory = $Searcher.QueryHistory(1,50)
 
-import argparse
-import requests
-import psutil
-import json
-from datetime import datetime
-import time
-import re
-import glob
-import sys
+    if ($updatehistory -and $updatehistory.count -gt 0)
+    {
+    
+        foreach ($lastupdate in $updatehistory)
+        {
+            $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+        }
+    }
 
-import json
-import sys, os, getopt, re, subprocess
+    if ($lastupdateinstalldate)
+    {
+        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+    }
+    else
+    {
+        $lastupdateinstalldate = Get-Date "01/01/1970"
+        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+    }
+    $lastupdatelist = $lastupdatelist -replace "`n|`r"
+    $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9)>>>`n"
+    $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
+    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
+    write-host "$outputlastupdateinstalldate"
+    
 
-import os
-import os.path
-
-
-def inventory_windows_updates_kpc(info):
-    return [(x[0], None) for x in info]
-
-
-#Linux Homepath of OMD User
-homepath = os.path.expanduser('~')
-
-
-def check_windows_updates_kpc(item, _no_params, info):
-
-    for line in info:
-        if len(line) < 8:
-            continue  # Skip incomplete lines
-
-        job_name, job_type, job_last_state, job_last_result, job_failed_backup_info, job_creation_time, job_end_time, computername = line[
-            :8
-        ]
-
-        #This is the Folder Config Part, where CheckMK should store all Files
-        path = homepath + "/kpcchecks/veeam_jobs_kpc/" + str(computername) + "/"
-
-        #Create Folder if not Exits
-        if not os.path.exists(path):
-             os.makedirs(path)
-        
-
-        #Full Path of the State File:
-        statefilefullpath = path + job_name + ".json"
-
-        #We create Json Files with the last States if the Job is not running. We will use the Values if the Job is Running, to Show the Last Finished state in CheckMK
-        if job_last_state not in ["Working", "Postprocessing"]:
-
-             fileoutput = {
-                 "job_name": job_name,
-                 "job_type": job_type,
-                 "job_last_state": job_last_state,
-                 "job_last_result": job_last_result,
-                 "job_failed_backup_info": job_failed_backup_info,
-                 "job_creation_time": job_creation_time,
-                 "job_end_time": job_end_time,
-                 "computername": computername
-             }
-        
-             #Write Results into Json File for Each Service, so we can track last "OK" State with the Timestamp. If the CRC Counter goes up, we know, that we have to do an CRIT Error Message
-             json_object = json.dumps(fileoutput, indent=4)
-             statefile = open(statefilefullpath, "w")
-             statefile.write(json_object)
-             statefile.close()
+    #Checking for available Windows Updates
+    $Mandatorycount=0
+    $Mandatoryupdates=""
+    $Optionalcount=0
+    $Optionalupdates=""
+    $Criticalcount=0
+    $Criticalupdates=""
+    $Importantcount=0
+    $Importantupdates=""
+    $Lowcount=0
+    $Lowupdates=""
+    $Moderatecount=0
+    $Moderateupdates=""
+    $Unspecifiedcount=0
+    $Unspecifiedupdates=""
 
 
-        
-        #Load Last Backup State if available
-        file_exists = os.path.exists(statefilefullpath)
-        if file_exists is True:
-             with open(statefilefullpath) as json_file:
-                  laststate = json.load(json_file)
-             laststate['job_failed_backup_info'] = laststate['job_failed_backup_info'].replace("XXXNEWLINEXXX", "\n")
-             laststate['job_failed_backup_info'] = "\n" + laststate['job_failed_backup_info'] + "\n \n \n" + support
+    $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+    $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
+    $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
+    if ($Updates -and $Updates.count -gt 0)
+    {
+    
+        foreach ($Update in $Updates)
+        {
+            $Updatetitle = $Update.Title
+            $Updatetitle = $Updatetitle -replace "`n|`r"
+
+            if ($Update.IsMandatory -eq 1)
+            {
+                $Mandatoryupdates = $Mandatoryupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Mandatorycount++
+            }
+            if ($Update.IsMandatory -eq 0)
+            {
+                $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Optionalcount++
+            }
+            if ($Update.MsrcSeverity -eq "Critical")
+            {
+                $Criticalupdates = $Criticalupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Criticalcount++
+            }
+            if ($Update.MsrcSeverity -eq "Important")
+            {
+                $Importantupdates = $Importantupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Importantcount++
+            }
+            if ($Update.MsrcSeverity -eq "Low")
+            {
+                $Lowupdates = $Lowupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Lowcount++
+            }
+            if ($Update.MsrcSeverity -eq "Moderate")
+            {
+                $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
+                $Moderatecount++
+            }
+            if ($Update.MsrcSeverity -eq $null)
+            {
+                $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Unspecifiedcount++
+            }
+        }
 
 
-        job_failed_backup_info = job_failed_backup_info.replace("XXXNEWLINEXXX", "\n")
-        job_failed_backup_info = "\n" + job_failed_backup_info + "\n \n \n" + support
-        if job_name != item:
-            continue  # Skip not matching lines
-
-        #If there is no last state available when a job is running use this
-        if job_last_state in ["Working", "Postprocessing"] and file_exists is False:
-            return 0, "Running since %s (current state is: %s)" % (
-                job_creation_time,
-                job_last_state,
-            )
-        #if there is a last state available when a job is running use this
-        if job_last_state in ["Working", "Postprocessing"] and laststate: 
-             if laststate['job_last_result'] == "Success":
-                 state = 0
-             elif laststate['job_last_state'] == "Idle" and laststate['job_type'] == "BackupSync":
-                # A sync job is always idle
-                 state = 0
-             elif laststate['job_last_result'] == "Failed":
-                 state = 2
-             elif laststate['job_last_state'] == "Stopped" and laststate['job_last_result'] == "Warning":
-                 state = 1
-             else:
-                 state = 3
-
-             return state, "Running since %s (current state is: %s) \n \n Last State: %s, Last Result: %s, Creation time: %s, End time: %s, Type: %s %s" % (
-                 job_creation_time,
-                 job_last_state,
-                 laststate['job_last_state'],
-                 laststate['job_last_result'],
-                 laststate['job_creation_time'],
-                 laststate['job_end_time'],
-                 laststate['job_type'],
-                 laststate['job_failed_backup_info'],
-             )
-
-
-
-       
-
-        if job_last_result == "Success":
-            state = 0
-        elif job_last_state == "Idle" and job_type == "BackupSync":
-            # A sync job is always idle
-            state = 0
-        elif job_last_result == "Failed":
-            state = 2
-        elif job_last_state == "Stopped" and job_last_result == "Warning":
-            state = 1
-        else:
-            state = 3
-
-        return state, "State: %s, Result: %s, Creation time: %s, End time: %s, Type: %s %s" % (
-            job_last_state,
-            job_last_result,
-            job_creation_time,
-            job_end_time,
-            job_type,
-            job_failed_backup_info,
-        )
-
-
-check_info["windows_updates_kpc"] = {
-    "check_function": check_windows_updates_kpc,
-    "inventory_function": inventory_windows_updates_kpc,
-    "service_description": "Windows Updates KPC",
+}
+    $outputwindowsupdates = "<<<windows_updates_kpc:sep(9)>>>`n"
+    $jobname_windows_updates_kpc = "Windows Updates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    write-host $outputwindowsupdates
+}
+catch
+{
+$errMsg = $_.Exception.Message
+$errItem = $_.Exception.ItemName
+Write-Error "Totally unexpected and unhandled error occured:`n Item: $errItem`n Error Message: $errMsg"
+Break
 }
