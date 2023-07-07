@@ -64,21 +64,24 @@ def check_windows_updates_kpc(item, _no_params, info):
         if len(line) < 15:
             continue  # Skip incomplete lines
 
-        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Lowcount, Moderatecount, Unspecifiedcount, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
+        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
             :15
         ]
 
+        Mandatoryupdates = Mandatoryupdates.replace("XXXNEWLINEXXX", "\n")
+        Mandatoryupdates = "\n \n Mandatory Updates: \n \n" + Mandatoryupdates + "\n \n \n"
+
         Criticalupdates = Criticalupdates.replace("XXXNEWLINEXXX", "\n")
-        Criticalupdates = "\n \n Critical Severity: \n \n" + Criticalupdates + "\n \n \n"
+        Criticalupdates = "Critical Severity: \n \n" + Criticalupdates + "\n \n \n"
 
         Importantupdates = Importantupdates.replace("XXXNEWLINEXXX", "\n")
         Importantupdates = "Important Severity: \n \n" + Importantupdates + "\n \n \n"
 
-        Lowupdates = Lowupdates.replace("XXXNEWLINEXXX", "\n")
-        Lowupdates = "Low Severity: \n \n" + Lowupdates + "\n \n \n"
-
         Moderateupdates = Moderateupdates.replace("XXXNEWLINEXXX", "\n")
         Moderateupdates  = "Moderate Severity: \n \n" + Moderateupdates + "\n \n \n"
+
+        Lowupdates = Lowupdates.replace("XXXNEWLINEXXX", "\n")
+        Lowupdates = "Low Severity: \n \n" + Lowupdates + "\n \n \n"
 
         Unspecifiedupdates = Unspecifiedupdates.replace("XXXNEWLINEXXX", "\n")
         Unspecifiedupdates = "Unspecified Severity: \n \n" + Unspecifiedupdates + "\n \n \n" + support
@@ -88,17 +91,18 @@ def check_windows_updates_kpc(item, _no_params, info):
         if jobname_windows_updates_kpc != item:
             continue  # Skip not matching lines
 
-        return 0, "Mandatory: %s, Critical: %s, Important: %s, Low: %s, Moderate: %s, Unspecified: %s %s %s %s %s %s" % (
+        return 0, "Mandatory: %s, Critical: %s, Important: %s, Moderate: %s, Low: %s, Unspecified: %s %s %s %s %s %s %s" % (
              Mandatorycount,
              Criticalcount,
              Importantcount,
-             Lowcount,
              Moderatecount,
+             Lowcount,
              Unspecifiedcount,
+             Mandatoryupdates,
              Criticalupdates,
              Importantupdates,
-             Lowupdates,
              Moderateupdates,
+             Lowupdates,
              Unspecifiedupdates, 
         )
 
