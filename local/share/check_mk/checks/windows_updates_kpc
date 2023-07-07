@@ -1,3 +1,7 @@
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
@@ -21,131 +25,85 @@
 #
 ################################################################################################################
 
-$pshost = get-host
-$pswindow = $pshost.ui.rawui
-
-$newsize = $pswindow.buffersize
-$newsize.height = 300
-$newsize.width = 150
-$pswindow.buffersize = $newsize
 
 
-try
-{
-    #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
-    $lastupdatelist=""
+#<<<windows_updates_kpc:sep(9)>>>
+#0	9	0	0	0	0	9		Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX					Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX
 
 
-    $lastupdateinstalldate=@{}
-    $Session = New-Object -ComObject Microsoft.Update.Session
-    $Searcher = $Session.CreateUpdateSearcher()
-    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(1,500)
+support = "For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
 
-    if ($updatehistory -and $updatehistory.count -gt 0)
-    {
-    
-        foreach ($lastupdate in $updatehistory)
-        {
-            if ($lastupdate.Date -and $lastupdate.Title)
-            {
-                $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
-            }
-        }
-    }
+import argparse
+import requests
+import psutil
+import json
+from datetime import datetime
+import time
+import re
+import glob
+import sys
 
-    if ($lastupdateinstalldate)
-    {
-        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
-    }
-    else
-    {
-        $lastupdateinstalldate = Get-Date "01/01/1970"
-        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
-    }
-    $lastupdatelist = $lastupdatelist -replace "`n|`r"
-    $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9)>>>`n"
-    $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
-    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
-    write-host "$outputlastupdateinstalldate"
-    
+import json
+import sys, os, getopt, re, subprocess
 
-    #Checking for available Windows Updates
-    $Mandatorycount=0
-    $Mandatoryupdates=""
-    $Optionalcount=0
-    $Optionalupdates=""
-    $Criticalcount=0
-    $Criticalupdates=""
-    $Importantcount=0
-    $Importantupdates=""
-    $Lowcount=0
-    $Lowupdates=""
-    $Moderatecount=0
-    $Moderateupdates=""
-    $Unspecifiedcount=0
-    $Unspecifiedupdates=""
+import os
+import os.path
 
 
-    $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-    $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
-    $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
-    if ($Updates -and $Updates.count -gt 0)
-    {
-    
-        foreach ($Update in $Updates)
-        {
-            $Updatetitle = $Update.Title
-            $Updatetitle = $Updatetitle -replace "`n|`r"
-
-            if ($Update.IsMandatory -eq 1)
-            {
-                $Mandatoryupdates = $Mandatoryupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Mandatorycount++
-            }
-            if ($Update.IsMandatory -eq 0)
-            {
-                $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Optionalcount++
-            }
-            if ($Update.MsrcSeverity -eq "Critical")
-            {
-                $Criticalupdates = $Criticalupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Criticalcount++
-            }
-            if ($Update.MsrcSeverity -eq "Important")
-            {
-                $Importantupdates = $Importantupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Importantcount++
-            }
-            if ($Update.MsrcSeverity -eq "Low")
-            {
-                $Lowupdates = $Lowupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Lowcount++
-            }
-            if ($Update.MsrcSeverity -eq "Moderate")
-            {
-                $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
-                $Moderatecount++
-            }
-            if ($Update.MsrcSeverity -eq $null)
-            {
-                $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Unspecifiedcount++
-            }
-        }
+def inventory_windows_updates_kpc(info):
+    return [(x[0], None) for x in info]
 
 
-}
-    $outputwindowsupdates = "<<<windows_updates_kpc:sep(9)>>>`n"
-    $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Lowcount" + "`t" + "$Moderatecount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
-    write-host $outputwindowsupdates
-}
-catch
-{
-$errMsg = $_.Exception.Message
-$errItem = $_.Exception.ItemName
-Write-Error "Totally unexpected and unhandled error occured:`n Item: $errItem`n Error Message: $errMsg"
-Break
+#Linux Homepath of OMD User
+homepath = os.path.expanduser('~')
+
+
+def check_windows_updates_kpc(item, _no_params, info):
+
+    for line in info:
+        if len(line) < 15:
+            continue  # Skip incomplete lines
+
+        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Lowcount, Moderatecount, Unspecifiedcount, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
+            :15
+        ]
+
+        Criticalupdates = Criticalupdates.replace("XXXNEWLINEXXX", "\n")
+        Criticalupdates = "\n \n Critical Severity: \n \n" + Criticalupdates + "\n \n \n"
+
+        Importantupdates = Importantupdates.replace("XXXNEWLINEXXX", "\n")
+        Importantupdates = "Important Severity: \n \n" + Importantupdates + "\n \n \n"
+
+        Lowupdates = Lowupdates.replace("XXXNEWLINEXXX", "\n")
+        Lowupdates = "Low Severity: \n \n" + Lowupdates + "\n \n \n"
+
+        Moderateupdates = Moderateupdates.replace("XXXNEWLINEXXX", "\n")
+        Moderateupdates  = "Moderate Severity: \n \n" + Moderateupdates + "\n \n \n"
+
+        Unspecifiedupdates = Unspecifiedupdates.replace("XXXNEWLINEXXX", "\n")
+        Unspecifiedupdates = "Unspecified Severity: \n \n" + Unspecifiedupdates + "\n \n \n" + support
+
+
+
+        if jobname_windows_updates_kpc != item:
+            continue  # Skip not matching lines
+
+        return 0, "Mandatory: %s, Critical: %s, Important: %s, Low: %s, Moderate: %s, Unspecified: %s %s %s %s %s %s" % (
+             Mandatorycount,
+             Criticalcount,
+             Importantcount,
+             Lowcount,
+             Moderatecount,
+             Unspecifiedcount,
+             Criticalupdates,
+             Importantupdates,
+             Lowupdates,
+             Moderateupdates,
+             Unspecifiedupdates, 
+        )
+
+check_info["windows_updates_kpc"] = {
+    "check_function": check_windows_updates_kpc,
+    "inventory_function": inventory_windows_updates_kpc,
+    "service_description": "KPC %s",
 }
