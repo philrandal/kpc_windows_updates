@@ -25,10 +25,8 @@
 ################################################################################################################
 
 
-
-#<<<windows_lastupdateinstalldate_kpc:sep(9):cached(1688714200,3600)>>>
-#1688584264 07/05/2023 19:11:04 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3675.0)XXXNEWLINEXXX07/04/2023 19:11:08 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3559.0)XXXNEWLINEXXX07/03/2023 19:02:09 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3451.0)XXXNEWLINEXXX07/03/2023 18:32:29 2023-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5027225)XXXNEWLINEXXX07/03/2023 18:12:22 2023-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5027225)XXXNEWLINEXXX07/03/2023 18:10:46 2023-06 Cumulative Update for .NET Framework 3.5, 4.8 and 4.8.1 for Microsoft server operating system version 21H2 for x64 (KB5027544)XXXNEWLINEXXX07/03/2023 18:10:18 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3440.0)XXXNEWLINEXXX07/03/2023 18:10:09 2022-08 Security Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5012170)XXXNEWLINEXXX07/03/2023 18:09:43 XXXNEWLINEXXX
-
+#<<<windows_lastupdateinstalldate_kpc:sep(9):encoding(cp437)>>>
+#Windows Update History	07/09/2023 19:11:05	1	07/09/2023 19:11:05 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.4052.0)XXXNEWLINEXXX07/08/2023 19:14:01 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3953.0)
 
 support = "For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
 
