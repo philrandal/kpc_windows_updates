@@ -43,7 +43,10 @@ def discover_windows_lastupdateinstalldate_kpc(section):
         yield Service(item=jobname_windows_lastupdateinstalldate_kpc)
 
 
-def check_windows_lastupdateinstalldate_kpc(item, section):
+def check_windows_lastupdateinstalldate_kpc(item, params, section):
+
+    warn = params["warning_lower"][0]
+    crit = params["warning_lower"][1]
 
     for line in section:
         if len(line) < 3:
@@ -56,6 +59,12 @@ def check_windows_lastupdateinstalldate_kpc(item, section):
         if (lastupdatelist == "-"):
             lastupdatelist = ""
 
+        now = datetime.now()
+        lastupdateinstalldate_convert = datetime.datetime.fromtimestamp(round(lastupdateinstalldate / 1000))
+        datedifference = datetime.now() - lastupdateinstalldate_convert
+        datedifference_days = int(datedifference.days)
+
+
         lastupdateinstalldate  = int(lastupdateinstalldate)
         lastupdateinstalldate = datetime.utcfromtimestamp(lastupdateinstalldate).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -66,7 +75,7 @@ def check_windows_lastupdateinstalldate_kpc(item, section):
 
 
         state = State.OK
-        summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate
+        summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + datedifference_days + " days ago)"
         summarydetails = "Update History:" + lastupdatelist + support
 
         yield Result(
@@ -79,4 +88,6 @@ register.check_plugin(
     service_name = "KPC %s",
     discovery_function = discover_windows_lastupdateinstalldate_kpc,
     check_function = check_windows_lastupdateinstalldate_kpc,
+    check_default_parameters={'warning_lower' : (30,50)},
+    check_ruleset_name="windows_updates_kpc_windows_lastupdateinstalldate",
 )
