@@ -20,7 +20,6 @@
 # Web International: https://www.kpc.de/en
 #
 ################################################################################################################
-
 $pshost = get-host
 $pswindow = $pshost.ui.rawui
 
@@ -63,8 +62,12 @@ try
         $lastupdateinstalldate = Get-Date "01/01/1970"
         $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
     }
+    if ($lastupdatelist -eq "")
+    {
+        $lastupdatelist = "-"
+    }
     $lastupdatelist = $lastupdatelist -replace "`n|`r"
-    $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9)>>>`n"
+    $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
     $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
     write-host "$outputlastupdateinstalldate"
@@ -137,10 +140,37 @@ try
 
 
 }
-    $outputwindowsupdates = "<<<windows_updates_kpc:sep(9)>>>`n"
+
+    if ($Mandatoryupdates -eq "")
+    {
+        $Mandatoryupdates = "-"
+    }
+    if ($Optionalupdates -eq "")
+    {
+        $Optionalupdates = "-"
+    }
+    if ($Criticalupdates -eq "")
+    {
+        $Criticalupdates = "-"
+    }
+    if ($Moderateupdates -eq "")
+    {
+        $Moderateupdates = "-"
+    }
+    if ($Lowupdates -eq "")
+    {
+        $Lowupdates = "-"
+    }
+    if ($Unspecifiedupdates -eq "")
+    {
+        $Unspecifiedupdates = "-"
+    }
+
+    $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
     $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
-    write-host $outputwindowsupdates
+    $outputwindowsupdates = $outputwindowsupdates
+    write-host "$outputwindowsupdates"
 }
 catch
 {
