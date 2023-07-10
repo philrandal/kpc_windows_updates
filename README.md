@@ -17,7 +17,7 @@ This Package contains a new PowerShell Check to Check the System for new Availab
 
 
 
-### Added default Agent execution Settings for the Windows Agent Plugin: ###
-- Default cache interval of 10 Minutes
+### Added default Agent execution Settings for the Windows Agent Plugin (Agent Bakery): ###
+- Default cache interval of 3 Hours
 - Default asynchronous execution
-- Default execution timeout of 360 Seconds
+- Default execution timeout of 600 Seconds
