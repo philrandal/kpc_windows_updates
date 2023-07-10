@@ -35,12 +35,11 @@ try
     #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
     $lastupdatelist=""
     $lastupdatelistcounter=0
-
-
-    $lastupdateinstalldate=@{}
+    $lastupdateinstalldate=""
+    #$lastupdateinstalldate=@{}
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
-    $lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
+    #$lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
     $updatehistory = $Searcher.QueryHistory(0,1000)
 
     if ($updatehistory -and $updatehistory.count -gt 0)
@@ -51,6 +50,10 @@ try
             if ($lastupdate.Date -and $lastupdate.Title -and $lastupdate.Title -notlike "*Intelligence-Update*" -and $lastupdate.Title -notlike "*Intelligence Update*" -and $lastupdatelistcounter -lt 80 )
             {
                 $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+                if($lastupdateinstalldate -eq "")
+                {
+                    $lastupdateinstalldate = $lastupdate.Date
+                }
                 $lastupdatelistcounter++
             }
         }
@@ -58,7 +61,6 @@ try
 
     if ($lastupdateinstalldate)
     {
-        $lastupdateinstalldate = $lastupdateinstalldate
         $now = Get-Date
         $lastupdateinstalldays = New-TimeSpan -Start $lastupdateinstalldate -End $now
         $lastupdateinstalldays = $lastupdateinstalldays.Days
