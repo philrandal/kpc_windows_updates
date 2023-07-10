@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
 # Author: Matthias Binder
 # License: GNU General Public License
-# Date: 05/2023
+# Date: 07/2023
 #
-#
+# 
 # For Support and Sales Please Contact K&P Computer!
 #
 # E-Mail: hds@kpc.de
