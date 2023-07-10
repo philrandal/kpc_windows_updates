@@ -17,7 +17,7 @@ Features:
 - Checking for available Windows Updates sorted by Severity
 - Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
 - Showing all available Updates in Detailed Summary
-- Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of the last 50 installed updates in the summary details.
+- Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of up to the last 80 installed updates in the summary details. (Intelligence Updates are excepted)
 - Warn/Crit level Settings if the System did not install any update during the last X days.
 - Included in Agent Rules for Agent bakery
 - No VBS Scripts anymore, only Powershell will be used
