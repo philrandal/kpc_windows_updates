@@ -39,7 +39,7 @@ try
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
     $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(1,500)
+    $updatehistory = $Searcher.QueryHistory(1,70)
 
     if ($updatehistory -and $updatehistory.count -gt 0)
     {
