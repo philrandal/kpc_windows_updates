@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: cp437 -*-
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
