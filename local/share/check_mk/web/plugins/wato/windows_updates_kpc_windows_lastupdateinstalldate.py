@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: cp437 -*-
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
@@ -23,48 +24,69 @@
 #
 ################################################################################################################
 
-from cmk.gui.i18n import _
 
-# import required to register agent
-from cmk.gui.plugins.wato import (
-    rulespec_registry,
-    HostRulespec,
-    CheckParameterRulespecWithoutItem,
-    RulespecGroupCheckParametersOperatingSystem
+
+#<<<windows_lastupdateinstalldate_kpc:sep(9):cached(1688714200,3600)>>>
+#1688584264 07/05/2023 19:11:04 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3675.0)XXXNEWLINEXXX07/04/2023 19:11:08 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3559.0)XXXNEWLINEXXX07/03/2023 19:02:09 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3451.0)XXXNEWLINEXXX07/03/2023 18:32:29 2023-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5027225)XXXNEWLINEXXX07/03/2023 18:12:22 2023-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5027225)XXXNEWLINEXXX07/03/2023 18:10:46 2023-06 Cumulative Update for .NET Framework 3.5, 4.8 and 4.8.1 for Microsoft server operating system version 21H2 for x64 (KB5027544)XXXNEWLINEXXX07/03/2023 18:10:18 Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.3440.0)XXXNEWLINEXXX07/03/2023 18:10:09 2022-08 Security Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5012170)XXXNEWLINEXXX07/03/2023 18:09:43 XXXNEWLINEXXX
+
+
+support = "For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
+
+
+from .agent_based_api.v1 import *
+import pprint
+from datetime import datetime, timedelta
+
+
+def discover_windows_lastupdateinstalldate_kpc(section):
+    for jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist in section:  
+        yield Service(item=jobname_windows_lastupdateinstalldate_kpc)
+
+
+def check_windows_lastupdateinstalldate_kpc(item, params, section):
+
+    warn = params["warning_lower"][0]
+    crit = params["warning_lower"][1]
+
+    for line in section:
+        if len(line) < 4:
+            continue  # Skip incomplete lines
+
+        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist = line[
+            :4
+        ]
+
+        if (lastupdatelist == "-"):
+            lastupdatelist = ""
+
+        lastupdatelist = lastupdatelist .replace("XXXNEWLINEXXX", "\n")
+        lastupdatelist = "\n \n" + lastupdatelist + "\n \n \n" + support
+        if jobname_windows_lastupdateinstalldate_kpc != item:
+            continue  # Skip not matching lines
+
+        if int(lastupdateinstalldays) >= crit:
+             state = State.CRIT
+        elif int(lastupdateinstalldays) >= warn:
+             state = State.WARN
+        else:
+             state = State.OK
+        if int(lastupdateinstalldays) == 99999:
+             lastupdateinstalldays = "?"
+             state = State.CRIT
+
+        summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + str(lastupdateinstalldays) + " days ago) / (warn: " + str(warn) + " / crit: " + str(crit) + ")"
+        summarydetails = "Update History:" + lastupdatelist + support
+
+        yield Result(
+             state=state,
+             summary=f"{summarytext}",
+             details = summarydetails )
+
+register.check_plugin(
+    name = "windows_lastupdateinstalldate_kpc",
+    service_name = "KPC %s",
+    discovery_function = discover_windows_lastupdateinstalldate_kpc,
+    check_function = check_windows_lastupdateinstalldate_kpc,
+    check_default_parameters={'warning_lower' : (30,50)},
+    check_ruleset_name="windows_updates_kpc_windows_lastupdateinstalldate",
 )
-
-from cmk.gui.valuespec import (
-    FixedValue,
-    TextInput,
-    Age,
-    ListOfStrings,
-    DropdownChoice, 
-)
-
-# import structure where special agent will be registered
-from cmk.gui.plugins.wato.datasource_programs import RulespecGroupDatasourcePrograms
-
-
-
- 
-def _parameter_valuespec_windows_updates_kpc_windows_lastupdateinstalldate():
-    return Dictionary(
-        elements=[
-            ("warning_lower", Tuple(
-                title=_("Levels for License Expiry Check"),
-                elements=[
-                    Integer(title=_("Warning if the last update installation is more than X days ago"), default_value=50),
-                    Integer(title=_("Warning if the last update installation is more than X days ago"), default_value=30),
-                ],
-            )),
-        ],
-    )
-   
-        
-rulespec_registry.register(
-CheckParameterRulespecWithoutItem(
-check_group_name="windows_updates_kpc_windows_lastupdateinstalldate",
-group=RulespecGroupCheckParametersOperatingSystem,
-parameter_valuespec=_parameter_valuespec_windows_updates_kpc_windows_lastupdateinstalldate,
-title=lambda: _("Windows Updates (KPC) - Levels for Windows Update History"),
-))
