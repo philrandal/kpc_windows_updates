@@ -30,7 +30,7 @@ def get_windows_updates_kpc_files(conf: Dict[str, Any]) -> FileGenerator:
         yield Plugin(
             base_os=OS.WINDOWS,
             source=Path("windows_updates_kpc.ps1"),
-            interval=3600,
+            interval=10800,
             timeout=600,
             asynchronous=True)
 
