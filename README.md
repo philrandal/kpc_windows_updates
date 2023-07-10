@@ -14,7 +14,7 @@ https://github.com/matthias1232/kpc_windows_updates/releases
 ### Windows Update Checks for CheckMK ###
  
 Features:
-- Checking for available Windows Updates with a Powershell Script
+- Checking for available Windows Updates sorted by Severity
 - Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
 - Showing all available Updates in Detailed Summary
 - Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of the last 50 installed updates in the summary details.
