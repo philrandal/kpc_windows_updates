@@ -40,8 +40,8 @@ try
     $lastupdateinstalldate=@{}
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
-    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(1,1000)
+    $lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
+    $updatehistory = $Searcher.QueryHistory(0,1000)
 
     if ($updatehistory -and $updatehistory.count -gt 0)
     {
