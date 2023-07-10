@@ -24,10 +24,8 @@
 #
 ################################################################################################################
 
-
-
-#<<<windows_updates_kpc:sep(9)>>>
-#0	9	0	0	0	0	9		Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX					Dell Inc. - Bus Controllers and Ports, Display - Dell P2210H(Display Port)XXXNEWLINEXXXLEN International (Europe) GmbH - Monitor - 10/10/2016 12:00:00 AM - 1.0.0.0XXXNEWLINEXXXDell Inc. - Monitor, Other hardware - Dell E2211H(Digital)XXXNEWLINEXXXMicrosoft - HIDClass - 10/27/2015 12:00:00 AM - 9.9.108.0XXXNEWLINEXXXIntel - System - 9/19/2017 12:00:00 AM - 11.7.0.1000XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.47XXXNEWLINEXXXLenovo Ltd. - Firmware - 1.0.0.62XXXNEWLINEXXXQuectel Incorporated - Firmware - 5.0.0.11XXXNEWLINEXXXLenovo - System - 10.6.5.3XXXNEWLINEXXX
+#<<<windows_updates_kpc:sep(9):encoding(cp437)>>>
+#Windows Updates	0	5	0	0	0	0	5	-	Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.4146.0)XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXX	-		-	-	Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.391.4146.0)XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXXINTEL - System - 1/1/1970 12:00:00 AM - 10.1.1.42XXXNEWLINEXXX
 
 from .agent_based_api.v1 import *
 import pprint
