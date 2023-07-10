@@ -6,7 +6,7 @@
 # Author: K&P Computer Service- und Vertriebs-GmbH
 # Author: Matthias Binder
 # License: GNU General Public License
-# Date: 05/2023
+# Date: 07/2023
 #
 # 
 # For Support and Sales Please Contact K&P Computer!
