@@ -47,24 +47,14 @@ from cmk.gui.plugins.wato.datasource_programs import RulespecGroupDatasourceProg
 
 
  
-def _parameter_valuespec_windows_updates_kpc_windows_updates():
+def _parameter_valuespec_windows_updates_kpc_windows_lastupdateinstalldate():
     return Dictionary(
         elements=[
             ("warning_lower", Tuple(
                 title=_("Levels for Windows Updates"),
                 elements=[
-                    Integer(title=_("Mandatory Severity Warning"), default_value=1),
-                    Integer(title=_("Mandatory Severity Critical"), default_value=2),
-                    Integer(title=_("Critical Severity Warning"), default_value=1),
-                    Integer(title=_("Critical Severity Critical"), default_value=2),
-                    Integer(title=_("Important Severity Warning"), default_value=1),
-                    Integer(title=_("Important Severity Critical"), default_value=2),
-                    Integer(title=_("Moderate Severity Warning"), default_value=1),
-                    Integer(title=_("Moderate Severity Critical"), default_value=2),
-                    Integer(title=_("Low Severity Warning"), default_value=1),
-                    Integer(title=_("Low Severity Critical"), default_value=2),
-                    Integer(title=_("Unspecified Severity Warning"), default_value=1),
-                    Integer(title=_("Unspecified Severity Critical"), default_value=2),
+                    Integer(title=_("Warning if the last update installation is more than X days ago"), default_value=30),
+                    Integer(title=_("Critical if the last update installation is more than X days ago"), default_value=50),
                 ],
             )),
         ],
@@ -73,8 +63,8 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
         
 rulespec_registry.register(
 CheckParameterRulespecWithoutItem(
-check_group_name="windows_updates_kpc_windows_updates",
+check_group_name="windows_updates_kpc_windows_lastupdateinstalldate",
 group=RulespecGroupCheckParametersOperatingSystem,
-parameter_valuespec=_parameter_valuespec_windows_updates_kpc_windows_updates,
-title=lambda: _("Windows Updates (KPC) - Levels for Windows Updates"),
+parameter_valuespec=_parameter_valuespec_windows_updates_kpc_windows_lastupdateinstalldate,
+title=lambda: _("Windows Updates (KPC) - Levels for Windows Update History"),
 ))
