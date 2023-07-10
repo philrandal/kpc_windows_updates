@@ -15,6 +15,15 @@ https://github.com/matthias1232/kpc_windows_updates/releases
  
 This Package contains a new PowerShell Check to Check the System for new Available Windows Updates
 
+Features:
+- Checking for available Windows Updates with a Powershell Script
+- Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
+- Showing all available Updates in Detailed Summary
+- Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of the last 50 installed updates in the summary details.
+- Warn/Crit level Settings if the System did not install any update during the last X days.
+- Included in Agent Rules for Agent bakery
+
+
 
 
 ### Added default Agent execution Settings for the Windows Agent Plugin (Agent Bakery): ###
