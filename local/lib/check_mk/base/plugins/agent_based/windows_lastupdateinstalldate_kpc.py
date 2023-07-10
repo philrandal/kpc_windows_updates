@@ -37,7 +37,7 @@ from datetime import datetime, timedelta
 
 
 def discover_windows_lastupdateinstalldate_kpc(section):
-    for jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdatelist in section:  
+    for jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist in section:  
         yield Service(item=jobname_windows_lastupdateinstalldate_kpc)
 
 
@@ -47,33 +47,32 @@ def check_windows_lastupdateinstalldate_kpc(item, params, section):
     crit = params["warning_lower"][1]
 
     for line in section:
-        if len(line) < 3:
+        if len(line) < 4:
             continue  # Skip incomplete lines
 
-        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdatelist = line[
-            :3
+        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist = line[
+            :4
         ]
 
         if (lastupdatelist == "-"):
             lastupdatelist = ""
-
-        now = datetime.now()
-        lastupdateinstalldate_convert = datetime.datetime.fromtimestamp(round(lastupdateinstalldate / 1000))
-        datedifference = datetime.now() - lastupdateinstalldate_convert
-        datedifference_days = int(datedifference.days)
-
-
-        lastupdateinstalldate  = int(lastupdateinstalldate)
-        lastupdateinstalldate = datetime.utcfromtimestamp(lastupdateinstalldate).strftime('%Y-%m-%d %H:%M:%S')
 
         lastupdatelist = lastupdatelist .replace("XXXNEWLINEXXX", "\n")
         lastupdatelist = "\n \n" + lastupdatelist + "\n \n \n" + support
         if jobname_windows_lastupdateinstalldate_kpc != item:
             continue  # Skip not matching lines
 
+        if int(lastupdateinstalldays) >= crit:
+             state = State.CRIT
+        elif int(lastupdateinstalldays) >= warn:
+             state = State.WARN
+        else:
+             state = State.OK
+        if int(lastupdateinstalldays) == 99999:
+             lastupdateinstalldays = "?"
+             state = State.CRIT
 
-        state = State.OK
-        summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + datedifference_days + " days ago)"
+        summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + str(lastupdateinstalldays) + " days ago) / (warn: " + str(warn) + " / crit: " + str(crit) + ")"
         summarydetails = "Update History:" + lastupdatelist + support
 
         yield Result(
