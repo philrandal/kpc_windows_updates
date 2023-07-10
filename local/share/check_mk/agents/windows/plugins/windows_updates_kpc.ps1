@@ -1,9 +1,10 @@
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
 ################################################################################################################
 #
 # Author: K&P Computer Service- und Vertriebs-GmbH
 # Author: Matthias Binder
 # License: GNU General Public License
-# Date: 05/2023
+# Date: 07/2023
 #
 # 
 # For Support and Sales Please Contact K&P Computer!
@@ -55,12 +56,17 @@ try
 
     if ($lastupdateinstalldate)
     {
-        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+        $lastupdateinstalldate = $lastupdateinstalldate
+        $now = Get-Date
+        $lastupdateinstalldays = New-TimeSpan -Start $lastupdateinstalldate -End $now
+        $lastupdateinstalldays = $lastupdateinstalldays.Days
+        $lastupdateinstalldays
+        
     }
     else
     {
-        $lastupdateinstalldate = Get-Date "01/01/1970"
-        $lastupdateinstalldate = (New-TimeSpan -Start (Get-Date "01/01/1970") -End ($lastupdateinstalldate)).TotalSeconds
+        $lastupdateinstalldate = "No history found"
+        $lastupdateinstalldays = "99999"
     }
     if ($lastupdatelist -eq "")
     {
@@ -69,7 +75,7 @@ try
     $lastupdatelist = $lastupdatelist -replace "`n|`r"
     $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
-    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdatelist"
+    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdateinstalldays" + "`t" + "$lastupdatelist"
     write-host "$outputlastupdateinstalldate"
     
 
