@@ -31,7 +31,7 @@ Features:
 - Default asynchronous execution
 - Default execution timeout of 600 Seconds
 
-### Screemshots: ###
+### Screenshots: ###
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/66e1080e-d7a6-432a-aa20-e0342a364297)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/7a271c4b-5ac6-4ebc-8bac-ec25f9c884c6)
