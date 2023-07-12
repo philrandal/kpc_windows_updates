@@ -31,7 +31,7 @@ from cmk.gui.plugins.wato import (
     rulespec_registry,
     HostRulespec,
     CheckParameterRulespecWithoutItem,
-    RulespecGroupCheckParametersOperatingSystem
+    RulespecGroupCheckParametersApplications
 )
 
 from cmk.gui.valuespec import (
@@ -75,7 +75,7 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
 rulespec_registry.register(
 CheckParameterRulespecWithoutItem(
 check_group_name="windows_updates_kpc_windows_updates",
-group=RulespecGroupCheckParametersOperatingSystem,
+group=RulespecGroupCheckParametersApplications,
 parameter_valuespec=_parameter_valuespec_windows_updates_kpc_windows_updates,
-title=lambda: _("Windows Updates (KPC) - Levels for Windows Updates"),
+title=lambda: _("Windows Updates (KPC)"),
 ))
