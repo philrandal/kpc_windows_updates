@@ -32,39 +32,63 @@ $pswindow.buffersize = $newsize
 
 try
 {
+
+    ####Check if a reboot is required and since how many days###
+    $rebootrequired = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired"
+    if ($rebootrequired -eq "True")
+    {
+        
+        
+        $rebootrequiredsince = Get-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Select-Object -ExpandProperty 'RebootRequiredSince' -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+        if($rebootrequiredsince)
+        {
+            $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
+            $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
+            $rebootrequiredsince
+            $rebootrequiredsincedays = New-TimeSpan -Start $rebootrequiredsince -End $now
+            $rebootrequiredsincedays = $rebootrequiredsincedays.Days
+        }
+        else
+        {
+            $rebootrequiredsince = "notimefound"
+            $rebootrequiredsincedays = "9999"
+        }
+    }
+    else
+    {
+    $rebootrequiredsince = "0"
+    $rebootrequiredsincedays = "0"
+    }
+
     #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
     $lastupdatelist=""
-    $lastupdatelistcounter=0
-    $lastupdateinstalldate=""
-    #$lastupdateinstalldate=@{}
+
+
+    $lastupdateinstalldate=@{}
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
-    #$lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(0,1000)
+    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
+    $updatehistory = $Searcher.QueryHistory(1,70)
+
 
     if ($updatehistory -and $updatehistory.count -gt 0)
     {
     
         foreach ($lastupdate in $updatehistory)
         {
-            if ($lastupdate.Date -and $lastupdate.Title -and $lastupdate.Title -notlike "*Intelligence-Update*" -and $lastupdate.Title -notlike "*Intelligence Update*" -and $lastupdatelistcounter -lt 80 )
+            if ($lastupdate.Date -and $lastupdate.Title)
             {
                 $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
-                if($lastupdateinstalldate -eq "")
-                {
-                    $lastupdateinstalldate = $lastupdate.Date
-                }
-                $lastupdatelistcounter++
             }
         }
     }
 
     if ($lastupdateinstalldate)
     {
+        $lastupdateinstalldate = $lastupdateinstalldate
         $now = Get-Date
         $lastupdateinstalldays = New-TimeSpan -Start $lastupdateinstalldate -End $now
         $lastupdateinstalldays = $lastupdateinstalldays.Days
-        $lastupdateinstalldays
         
     }
     else
@@ -176,9 +200,10 @@ try
         $Unspecifiedupdates = "-"
     }
 
+
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsincedays" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     $outputwindowsupdates = $outputwindowsupdates
     write-host "$outputwindowsupdates"
 }
