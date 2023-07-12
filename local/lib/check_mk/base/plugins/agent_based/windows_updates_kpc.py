@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 
 
 def discover_windows_updates_kpc(section):
-    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
+    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsinceminutes, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
         yield Service(item=jobname_windows_updates_kpc)
 
 
@@ -57,13 +57,17 @@ def check_windows_updates_kpc(item, params, section):
     unspecifiedwarn = params["levels_unspecified"][0]
     unspecifiedcrit = params["levels_unspecified"][1]
     unspecifiedenabled = params["levels_unspecified"][2]
+    pendingrebootwarn = params["levels_pendingreboot"][0]
+    pendingrebootcrit = params["levels_pendingreboot"][1]
+    pendingrebootenabled = params["levels_pendingreboot"][2]
+
 
     for line in section:
-        if len(line) < 15:
+        if len(line) < 18:
             continue  # Skip incomplete lines
 
-        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
-            :15
+        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsinceminutes ,Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
+            :18
         ]
 
         if (Mandatoryupdates  == "-"):
@@ -146,32 +150,48 @@ def check_windows_updates_kpc(item, params, section):
              stateunspecified = " (CRIT)"
 
 
-        if int(Mandatorycount) >= int(mandatorywarn) and state != State.CRIT:
+        if int(Mandatorycount) >= int(mandatorywarn) and state != State.CRIT and mandatoryenabled == 'Enabled':
              state = State.WARN
-        if int(Mandatorycount) >= int(mandatorycrit):
+        if int(Mandatorycount) >= int(mandatorycrit) and mandatoryenabled == 'Enabled':
              state = State.CRIT
-        if int(Criticalcount) >= int(criticalwarn) and state != State.CRIT:
+        if int(Criticalcount) >= int(criticalwarn) and state != State.CRIT and criticalenabled == 'Enabled':
              state = State.WARN
-        if int(Criticalcount) >= int(criticalcrit):
+        if int(Criticalcount) >= int(criticalcrit) and criticalenabled == 'Enabled':
              state = State.CRIT
-        if int(Importantcount) >= int(importantwarn) and state != State.CRIT:
+        if int(Importantcount) >= int(importantwarn) and state != State.CRIT and importantenabled == 'Enabled':
              state = State.WARN
-        if int(Importantcount) >= int(importantcrit):
+        if int(Importantcount) >= int(importantcrit) and importantenabled == 'Enabled':
              state = State.CRIT
-        if int(Moderatecount) >= int(moderatewarn) and state != State.CRIT:
+        if int(Moderatecount) >= int(moderatewarn) and state != State.CRIT and moderatenabled == 'Enabled':
              state = State.WARN
-        if int(Moderatecount) >= int(moderatecrit):
+        if int(Moderatecount) >= int(moderatecrit) and moderatenabled == 'Enabled':
              state = State.CRIT
-        if int(Lowcount) >= int(lowwarn) and state != State.CRIT:
+        if int(Lowcount) >= int(lowwarn) and state != State.CRIT and lowenabled == 'Enabled':
              state = State.WARN
-        if int(Lowcount) >= lowcrit:
+        if int(Lowcount) >= lowcrit and lowenabled == 'Enabled':
              state = State.CRIT
-        if int(Unspecifiedcount) >= int(unspecifiedwarn) and state != State.CRIT:
+        if int(Unspecifiedcount) >= int(unspecifiedwarn) and state != State.CRIT and unspecifiedenabled == 'Enabled':
              state = State.WARN
-        if int(Unspecifiedcount) >= int(unspecifiedcrit):
+        if int(Unspecifiedcount) >= int(unspecifiedcrit) and unspecifiedenabled == 'Enabled':
+             state = State.CRIT
+        if int(Unspecifiedcount) >= int(unspecifiedcrit) and unspecifiedenabled == 'Enabled':
              state = State.CRIT
         if state != State.WARN and state != State.CRIT:
              state = State.OK
+
+        if mandatoryenabled == 'Disabled':
+             statemandatory = " (OK)"
+        if criticalenabled == 'Disabled':
+             statecritical = " (OK)"
+        if importantenabled == 'Disabled':
+             stateimportant = " (OK)"
+        if moderateenabled == 'Disabled':
+             statemoderate = " (OK)"
+        if lowenabled == 'Disabled':
+             statelow = " (OK)"
+        if unspecifiedenabled == 'Disabled':
+             stateunspecified = " (OK)"
+
 
 
         summarytext= "Mandatory: " + Mandatorycount + statemandatory + ", Critical: " + Criticalcount + statecritical + ", Important: " + Importantcount + stateimportant + ", Moderate: " + Moderatecount + statemoderate + ", Low: " + Lowcount + statelow + ", Unspecified: " + Unspecifiedcount + stateunspecified 
@@ -187,6 +207,6 @@ register.check_plugin(
     service_name = "KPC %s",
     discovery_function = discover_windows_updates_kpc,
     check_function = check_windows_updates_kpc,
-    check_default_parameters={'levels_mandatory' : (1,1,'Enabled'),'levels_critical' : (1,1,'Enabled'),'levels_important' : (1,6,'Enabled'),'levels_moderate' : (1,10,'Enabled'),'levels_low' : (1,99,'Enabled'),'levels_unspecified' : (1,99,'Enabled')},
+    check_default_parameters={'levels_mandatory' : (1,1,'Enabled'),'levels_critical' : (1,1,'Enabled'),'levels_important' : (1,6,'Enabled'),'levels_moderate' : (1,10,'Enabled'),'levels_low' : (1,99,'Enabled'),'levels_unspecified' : (1,99,'Enabled'),'levels_pendingreboot' : (48,96,'Enabled')},
     check_ruleset_name="windows_updates_kpc_windows_updates",
 )
