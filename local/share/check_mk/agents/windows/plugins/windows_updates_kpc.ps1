@@ -45,8 +45,8 @@ try
             $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
             $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
             $rebootrequiredsince
-            $rebootrequiredsincedays = New-TimeSpan -Start $rebootrequiredsince -End $now
-            $rebootrequiredsincedays = $rebootrequiredsincedays.Days
+            $rebootrequiredsinceminutes = New-TimeSpan -Start $rebootrequiredsince -End $now
+            $rebootrequiredsinceminutes = $rebootrequiredsinceminutes.Minutes
         }
         else
         {
@@ -203,7 +203,7 @@ try
 
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsincedays" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinceminutes" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     $outputwindowsupdates = $outputwindowsupdates
     write-host "$outputwindowsupdates"
 }
