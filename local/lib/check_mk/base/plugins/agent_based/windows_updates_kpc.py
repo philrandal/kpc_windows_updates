@@ -39,19 +39,24 @@ def discover_windows_updates_kpc(section):
 
 def check_windows_updates_kpc(item, params, section):
 
-    mandatorywarn = params["warning_lower"][0]
-    mandatorycrit = params["warning_lower"][1]
-    criticalwarn = params["warning_lower"][2]
-    criticalcrit = params["warning_lower"][3]
-    importantwarn = params["warning_lower"][4]
-    importantcrit = params["warning_lower"][5]
-    moderatewarn = params["warning_lower"][6]
-    moderatecrit = params["warning_lower"][7]
-    lowwarn = params["warning_lower"][8]
-    lowcrit = params["warning_lower"][9]
-    unspecifiedwarn = params["warning_lower"][10]
-    unspecifiedcrit = params["warning_lower"][11]
-
+    mandatorywarn = params["levels_mandatory"][0]
+    mandatorycrit = params["levels_mandatory"][1]
+    mandatoryenabled = params["levels_mandatory"][2]
+    criticalwarn = params["levels_critical"][0]
+    criticalcrit = params["levels_critical"][1]
+    criticalenabled = params["levels_critical"][2]
+    importantwarn = params["levels_important"][0]
+    importantcrit = params["levels_important"][1]
+    importantenabled = params["levels_important"][2]
+    moderatewarn = params["levels_moderate"][0]
+    moderatecrit = params["levels_moderate"][1]
+    moderateenabled = params["levels_moderate"][2]
+    lowwarn = params["levels_low"][0]
+    lowcrit = params["levels_low"][1]
+    lowenabled = params["levels_low"][2]
+    unspecifiedwarn = params["levels_unspecified"][0]
+    unspecifiedcrit = params["levels_unspecified"][1]
+    unspecifiedenabled = params["levels_unspecified"][2]
 
     for line in section:
         if len(line) < 15:
@@ -182,6 +187,6 @@ register.check_plugin(
     service_name = "KPC %s",
     discovery_function = discover_windows_updates_kpc,
     check_function = check_windows_updates_kpc,
-    check_default_parameters={'warning_lower' : (1,2,1,2,1,2,1,2,1,2,1,2)},
+    check_default_parameters={'levels_mandatory' : (1,1,'Enabled'),'levels_critical' : (1,1,'Enabled'),'levels_important' : (1,6,'Enabled'),'levels_moderate' : (1,10,'Enabled'),'levels_low' : (1,99,'Enabled'),'levels_unspecified' : (1,99,'Enabled')},
     check_ruleset_name="windows_updates_kpc_windows_updates",
 )
