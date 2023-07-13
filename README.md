@@ -17,12 +17,14 @@ Features:
 - Checking for available Windows Updates sorted by Severity
 - Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
 - Pending Reboot Check after Update Installation with WARN/CRIT Level Settings
+- CRIT Error if Update Search does not work for a while (Windows update not activated, WSUS Problem etc..)
 - Showing all available Updates in Detailed Summary
 - Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of up to the last 80 installed updates in the summary details. (Intelligence Updates are excepted)
 - Warn/Crit level Settings if the System did not install any update during the last X days.
 - Included in Agent Rules for Agent bakery
 - No VBS Scripts anymore, only Powershell will be used
 - Tested with Windows 2012R2/2016/2019/2022
+
 
 
 
