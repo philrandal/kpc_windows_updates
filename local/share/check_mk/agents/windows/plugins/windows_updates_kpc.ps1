@@ -38,26 +38,27 @@ try
     if ($rebootrequired -eq "True")
     {
         
-        
+        $rebootrequired = "Yes"
         $rebootrequiredsince = Get-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Select-Object -ExpandProperty 'RebootRequiredSince' -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
         if($rebootrequiredsince)
         {
             $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
             $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
             $rebootrequiredsince
-            $rebootrequiredsinceminutes = New-TimeSpan -Start $rebootrequiredsince -End $now
-            $rebootrequiredsinceminutes = $rebootrequiredsinceminutes.Minutes
+            $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
+            $rebootrequiredsinchours = $rebootrequiredsinchours.Hours
         }
         else
         {
             $rebootrequiredsince = "notimefound"
-            $rebootrequiredsincedays = "9999"
+            $rebootrequiredsinchours = "9999"
         }
     }
     else
     {
+    $rebootrequired = "No"
     $rebootrequiredsince = "0"
-    $rebootrequiredsincedays = "0"
+    $rebootrequiredsinchours = "0"
     }
 
     #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
@@ -203,7 +204,7 @@ try
 
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinceminutes" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinchours" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     $outputwindowsupdates = $outputwindowsupdates
     write-host "$outputwindowsupdates"
 }
