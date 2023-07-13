@@ -16,6 +16,7 @@ https://github.com/matthias1232/kpc_windows_updates/releases
 Features:
 - Checking for available Windows Updates sorted by Severity
 - Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
+- Pending Reboot Check after Update Installation with WARN/CRIT Level Settings
 - Showing all available Updates in Detailed Summary
 - Check for Windows Update History. Shows the last time when this System installed an Windows Update and also the List of up to the last 80 installed updates in the summary details. (Intelligence Updates are excepted)
 - Warn/Crit level Settings if the System did not install any update during the last X days.
