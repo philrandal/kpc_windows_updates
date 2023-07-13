@@ -63,11 +63,11 @@ def check_windows_updates_kpc(item, params, section):
 
 
     for line in section:
-        if len(line) < 18:
+        if len(line) < 19:
             continue  # Skip incomplete lines
 
         jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, updatesearcherror, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
-            :18
+            :19
         ]
 
         if (Mandatoryupdates  == "-"):
