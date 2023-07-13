@@ -35,9 +35,9 @@ Features:
 - Default execution timeout of 600 Seconds
 
 ### Screenshots: ###
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/5449b5a2-e922-4119-9cd0-b6750c4e63f6)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/7db9b335-8148-446c-9e39-f31342dd78ca)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/653887ce-c538-47f2-a3e8-61ba2479311d)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4e69c19d-3b33-4fcf-8f66-0c65c0e4443c)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/87e17756-65ab-42c3-8a55-2b8b1bad6e07)
 
