@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: cp437 -*-
-# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - License: GNU General Public License v2
+# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - All Rights Reserved
+# Unauthorized copying of this file, via any medium is strictly prohibited
+# Proprietary and confidential
+# Written by Matthias Binder m.binder@kpc.de, July 2023
+#
 ################################################################################################################
-#
-# Author: K&P Computer Service- und Vertriebs-GmbH
-# Author: Matthias Binder
-# License: GNU General Public License
-# Date: 07/2023
-#
-# 
 # For Support and Sales Please Contact K&P Computer!
 #
 # E-Mail: hds@kpc.de
