@@ -63,5 +63,5 @@ CheckParameterRulespecWithoutItem(
 check_group_name="windows_updates_kpc_windows_lastupdateinstalldate",
 group=RulespecGroupCheckParametersOperatingSystem,
 parameter_valuespec=_parameter_valuespec_windows_updates_kpc_windows_lastupdateinstalldate,
-title=lambda: _("Windows Updates (KPC) - Levels for Windows Update History"),
+title=lambda: _("Windows Updates History (KPC)"),
 ))
