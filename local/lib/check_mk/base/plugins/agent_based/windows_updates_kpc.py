@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 
 
 def discover_windows_updates_kpc(section):
-    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
+    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, updatesearcherror, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
         yield Service(item=jobname_windows_updates_kpc)
 
 
@@ -66,7 +66,7 @@ def check_windows_updates_kpc(item, params, section):
         if len(line) < 18:
             continue  # Skip incomplete lines
 
-        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
+        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, updatesearcherror, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
             :18
         ]
 
@@ -213,6 +213,12 @@ def check_windows_updates_kpc(item, params, section):
         summarytext= "Mandatory: " + Mandatorycount + statemandatory + ", Critical: " + Criticalcount + statecritical + ", Important: " + Importantcount + stateimportant + ", Moderate: " + Moderatecount + statemoderate + ", Low: " + Lowcount + statelow + ", Unspecified: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
         summarydetails = updatelist + Mandatoryupdates + Criticalupdates + Importantupdates + Moderateupdates + Lowupdates + Unspecifiedupdates + support
 
+        if (int(updatesearcherror) != 0):
+            state=State.CRIT
+            summarytext= str(updatesearcherror)
+            summarydetails = ""
+
+        
         yield Result(
              state=state,
              summary=f"{summarytext}",
