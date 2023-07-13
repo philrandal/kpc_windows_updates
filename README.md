@@ -39,9 +39,7 @@ Features:
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4e69c19d-3b33-4fcf-8f66-0c65c0e4443c)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/87e17756-65ab-42c3-8a55-2b8b1bad6e07)
-
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/fba740aa-c991-482c-a2e6-40239b28d9ff)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/e098c9b3-31c9-4b01-b693-0e75c2cddd2d)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4cefbcb2-cbbb-4708-ac9d-6c40481794c0)
 
