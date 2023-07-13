@@ -51,7 +51,7 @@ try
         else
         {
             $rebootrequiredsince = "notimefound"
-            $rebootrequiredsinchours = "9999"
+            $rebootrequiredsinchours = "99999"
         }
     }
     else
