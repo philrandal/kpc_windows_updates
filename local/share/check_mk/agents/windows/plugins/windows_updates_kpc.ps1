@@ -28,7 +28,7 @@ $newsize = $pswindow.buffersize
 $newsize.height = 300
 $newsize.width = 150
 $pswindow.buffersize = $newsize
-
+$now = Get-Date
 
 try
 {
@@ -44,9 +44,9 @@ try
         {
             $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
             $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
-            $rebootrequiredsince
             $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
-            $rebootrequiredsinchours = $rebootrequiredsinchours.Hours
+            $rebootrequiredsinchours = $rebootrequiredsinchours.TotalHours
+            $rebootrequiredsinchours = [Math]::Truncate($rebootrequiredsinchours)
         }
         else
         {
@@ -87,7 +87,6 @@ try
     if ($lastupdateinstalldate)
     {
         $lastupdateinstalldate = $lastupdateinstalldate
-        $now = Get-Date
         $lastupdateinstalldays = New-TimeSpan -Start $lastupdateinstalldate -End $now
         $lastupdateinstalldays = $lastupdateinstalldays.Days
         
