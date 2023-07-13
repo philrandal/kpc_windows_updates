@@ -30,47 +30,30 @@ $newsize.width = 150
 $pswindow.buffersize = $newsize
 $now = Get-Date
 
+
 try
 {
-
-    ####Check if a reboot is required and since how many days###
-    $rebootrequired = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired"
-    if ($rebootrequired -eq "True")
-    {
-        
-        $rebootrequired = "Yes"
-        $rebootrequiredsince = Get-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Select-Object -ExpandProperty 'RebootRequiredSince' -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-        if($rebootrequiredsince)
-        {
-            $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
-            $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
-            $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
-            $rebootrequiredsinchours = $rebootrequiredsinchours.TotalHours
-            $rebootrequiredsinchours = [Math]::Truncate($rebootrequiredsinchours)
-        }
-        else
-        {
-            $rebootrequiredsince = "notimefound"
-            $rebootrequiredsinchours = "99999"
-        }
-    }
-    else
-    {
-    $rebootrequired = "No"
-    $rebootrequiredsince = "0"
-    $rebootrequiredsinchours = "0"
-    }
 
     #Checking for Datetime when the last update was installed and Show the Update History of the last 80 Updates
     $lastupdatelist=""
     $lastupdatelistcounter=0
     $lastupdateinstalldate=""
-
+    $updatehistorysearcherror=0
     #$lastupdateinstalldate=@{}
-    $Session = New-Object -ComObject Microsoft.Update.Session
-    $Searcher = $Session.CreateUpdateSearcher()
-    $updatehistory = $Searcher.QueryHistory(0,1000)
 
+    
+    try
+    {
+        $Session = New-Object -ComObject Microsoft.Update.Session
+        $Searcher = $Session.CreateUpdateSearcher
+        $updatehistory = $Searcher.QueryHistory(0,1000)
+    }
+    catch
+    {
+        $errMsg = $_.Exception.Message
+        $errItem = $_.Exception.ItemName
+        $updatehistorysearcherror = "There was an error getting update history information. Maybe Windows update is not activated or System cannot get information from WSUS Server. Error Message: $errMsg"
+    }
 
     if ($updatehistory -and $updatehistory.count -gt 0)
     {
@@ -108,8 +91,37 @@ try
     $lastupdatelist = $lastupdatelist -replace "`n|`r"
     $outputlastupdateinstalldate = "<<<windows_lastupdateinstalldate_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_lastupdateinstalldate_kpc = "Windows Update History"
-    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdateinstalldays" + "`t" + "$lastupdatelist"
+    $outputlastupdateinstalldate = "$outputlastupdateinstalldate" + "$jobname_windows_lastupdateinstalldate_kpc" + "`t"  + "$lastupdateinstalldate" + "`t" + "$lastupdateinstalldays" + "`t" + "$updatehistorysearcherror" + "`t" + "$lastupdatelist"
     write-host "$outputlastupdateinstalldate"
+
+
+    ####Check if a reboot is required and since how many days###
+    $rebootrequired = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired"
+    if ($rebootrequired -eq "True")
+    {
+        
+        $rebootrequired = "Yes"
+        $rebootrequiredsince = Get-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Select-Object -ExpandProperty 'RebootRequiredSince' -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+        if($rebootrequiredsince)
+        {
+            $rebootrequiredsince = Get-Date -Date $rebootrequiredsince 
+            $rebootrequiredsince = $rebootrequiredsince.ToLocalTime()
+            $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
+            $rebootrequiredsinchours = $rebootrequiredsinchours.TotalHours
+            $rebootrequiredsinchours = [Math]::Truncate($rebootrequiredsinchours)
+        }
+        else
+        {
+            $rebootrequiredsince = "notimefound"
+            $rebootrequiredsinchours = "99999"
+        }
+    }
+    else
+    {
+    $rebootrequired = "No"
+    $rebootrequiredsince = "0"
+    $rebootrequiredsinchours = "0"
+    }
     
 
     #Checking for available Windows Updates
@@ -127,11 +139,22 @@ try
     $Moderateupdates=""
     $Unspecifiedcount=0
     $Unspecifiedupdates=""
+    $updatesearcherror=0
+    try
+    {
+        $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+        $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
+        $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
+
+    }
+    catch
+    {
+        $errMsg = $_.Exception.Message
+        $errItem = $_.Exception.ItemName
+        $updatesearcherror = "There was an error getting update information. Maybe Windows update is not activated or System cannot get information from WSUS Server. Error Message: $errMsg"
+    }
 
 
-    $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-    $UpdateSearcher = $UpdateSession.CreateupdateSearcher()
-    $Updates = @($UpdateSearcher.Search("IsHidden=0 and IsInstalled=0").Updates)
     if ($Updates -and $Updates.count -gt 0)
     {
     
@@ -208,7 +231,7 @@ try
 
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinchours" + "`t" + "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinchours" + "`t" + "$updatesearcherror" + "`t" +  "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     $outputwindowsupdates = $outputwindowsupdates
     write-host "$outputwindowsupdates"
 }
