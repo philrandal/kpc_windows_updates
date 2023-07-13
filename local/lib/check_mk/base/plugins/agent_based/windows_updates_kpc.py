@@ -265,6 +265,6 @@ register.check_plugin(
     service_name = "KPC %s",
     discovery_function = discover_windows_updates_kpc,
     check_function = check_windows_updates_kpc,
-    check_default_parameters={'levels_mandatory' : (1,1,'Enabled'),'levels_critical' : (1,1,'Enabled'),'levels_important' : (1,6,'Enabled'),'levels_moderate' : (1,10,'Enabled'),'levels_low' : (1,99,'Enabled'),'levels_unspecified' : (1,99,'Enabled'),'levels_pendingreboot' : (48,96,'Enabled')},
+    check_default_parameters={'levels_important1' : (1,1,'Enabled'),'levels_optional' : (1,99,'Enabled'),'levels_mandatory' : (1,1,'Disabled'),'levels_critical' : (1,1,'Disabled'),'levels_important' : (1,6,'Disabled'),'levels_moderate' : (1,10,'Disabled'),'levels_low' : (1,99,'Disabled'),'levels_unspecified' : (1,99,'Disabled'),'levels_pendingreboot' : (48,96,'Enabled')},
     check_ruleset_name="windows_updates_kpc_windows_updates",
 )
