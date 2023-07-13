@@ -34,7 +34,13 @@ def discover_windows_updates_kpc(section):
 
 
 def check_windows_updates_kpc(item, params, section):
-
+    
+    important1warn = params["levels_important1"][0]
+    important1crit = params["levels_important1"][1]
+    important1enabled = params["levels_important1"][2]
+    optionalwarn = params["levels_optional"][0]
+    optionalcrit = params["levels_optional"][1]
+    optionalenabled = params["levels_optional"][2]    
     mandatorywarn = params["levels_mandatory"][0]
     mandatorycrit = params["levels_mandatory"][1]
     mandatoryenabled = params["levels_mandatory"][2]
@@ -59,13 +65,16 @@ def check_windows_updates_kpc(item, params, section):
 
 
     for line in section:
-        if len(line) < 19:
+        if len(line) < 21:
             continue  # Skip incomplete lines
 
         jobname_windows_updates_kpc, Mandatorycount, important1count, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, updatesearcherror, Mandatoryupdates, important1updates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
-            :19
+            :21
         ]
-
+        if (important1updates  == "-"):
+            important1updates = ""        
+        if (Optionalupdates  == "-"):
+            Optionalupdates = ""
         if (Mandatoryupdates  == "-"):
             Mandatoryupdates = ""
         if (Criticalupdates  == "-"):
@@ -93,7 +102,7 @@ def check_windows_updates_kpc(item, params, section):
             
         if (Mandatoryupdates != ""):
              Mandatoryupdates = Mandatoryupdates.replace("XXXNEWLINEXXX", "\n")
-             Mandatoryupdates = "Mandatory Updates: \n \n" + Mandatoryupdates + "\n \n \n"
+             Mandatoryupdates = "Mandatory Severity: \n \n" + Mandatoryupdates + "\n \n \n"
 
         if (Criticalupdates != ""):
              Criticalupdates = Criticalupdates.replace("XXXNEWLINEXXX", "\n")
@@ -113,7 +122,7 @@ def check_windows_updates_kpc(item, params, section):
 
         if (Unspecifiedupdates != ""):
              Unspecifiedupdates = Unspecifiedupdates.replace("XXXNEWLINEXXX", "\n")
-             Unspecifiedupdates = "Optional Updates or Updates with unspecified Severity: \n \n" + Unspecifiedupdates
+             Unspecifiedupdates = "Unspecified Severity: \n \n" + Unspecifiedupdates
 
         support = "\n \n \n For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
 
@@ -122,6 +131,8 @@ def check_windows_updates_kpc(item, params, section):
             continue  # Skip not matching lines
 
         state = ""
+        stateimportant1 = " (OK)"   
+        stateoptional = " (OK)"
         statemandatory = " (OK)"
         statecritical = " (OK)"
         stateimportant = " (OK)"
@@ -130,7 +141,14 @@ def check_windows_updates_kpc(item, params, section):
         stateunspecified = " (OK)"
         statependingreboot = " (OK)"
 
-
+        if int(important1count) >= int(important1warn):
+             stateimportant1 = " (WARN)"
+        if int(important1count) >= int(important1crit):
+             stateimportant1 = " (CRIT)"
+        if int(Optionalcount) >= int(optionalwarn):
+             stateoptional = " (WARN)"
+        if int(Optionalcount) >= int(optionalcrit):
+             stateoptional = " (CRIT)"
         if int(Mandatorycount) >= int(mandatorywarn):
              statemandatory = " (WARN)"
         if int(Mandatorycount) >= int(mandatorycrit):
@@ -162,8 +180,15 @@ def check_windows_updates_kpc(item, params, section):
         if int(rebootrequiredsincehours) >= int(pendingrebootcrit):
              statependingreboot = " (CRIT, since " + rebootrequiredsincehours + " hours)"
 
-
-
+        
+        if int(important1count) >= int(important1warn) and state != State.CRIT and important1enabled == 'Enabled':
+             state = State.WARN
+        if int(important1count) >= int(important1crit) and important1enabled == 'Enabled':
+             state = State.CRIT
+        if int(Optionalcount) >= int(optionalwarn) and state != State.CRIT and optionalenabled == 'Enabled':
+             state = State.WARN
+        if int(Optionalcount) >= int(optionalcrit) and optionalenabled == 'Enabled':
+             state = State.CRIT
         if int(Mandatorycount) >= int(mandatorywarn) and state != State.CRIT and mandatoryenabled == 'Enabled':
              state = State.WARN
         if int(Mandatorycount) >= int(mandatorycrit) and mandatoryenabled == 'Enabled':
@@ -194,8 +219,14 @@ def check_windows_updates_kpc(item, params, section):
              state = State.CRIT
         if state != State.WARN and state != State.CRIT:
              state = State.OK
-        stateimportant1 = " (OK)"    
-        stateoptional = " (OK)"
+
+        
+         
+        
+        if important1enabled == 'Disabled':
+             stateimportant1 = " (OK)"   
+        if optionalenabled == 'Disabled':
+             stateoptional = " (OK)"
         if mandatoryenabled == 'Disabled':
              statemandatory = " (OK)"
         if criticalenabled == 'Disabled':
@@ -215,7 +246,7 @@ def check_windows_updates_kpc(item, params, section):
 
 
 
-        summarytext= "Important: " + important1count + stateimportant1 + ", Optional: " + Optionalcount + stateoptional + ", Mandatory Severity: " + Mandatorycount + statemandatory + ", Critical Severity: " + Criticalcount + statecritical + ", Important Severity: " + Importantcount + stateimportant + ", Moderate Severity: " + Moderatecount + statemoderate + ", Low Severity: " + Lowcount + statelow + ", Unspecified Severity: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
+        summarytext= "Important Updates: " + important1count + stateimportant1 + ", Optional Updates: " + Optionalcount + stateoptional + ", Mandatory Severity: " + Mandatorycount + statemandatory + ", Critical Severity: " + Criticalcount + statecritical + ", Important Severity: " + Importantcount + stateimportant + ", Moderate Severity: " + Moderatecount + statemoderate + ", Low Severity: " + Lowcount + statelow + ", Unspecified Severity: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
         summarydetails = updatelist + important1updates + Optionalupdates + Mandatoryupdates + Criticalupdates + Importantupdates + Moderateupdates + Lowupdates + Unspecifiedupdates + support
 
         if (updatesearcherror != "0"):
