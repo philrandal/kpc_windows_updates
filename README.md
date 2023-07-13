@@ -36,15 +36,15 @@ Features:
 - Default execution timeout of 600 Seconds
 
 ### Screenshots: ###
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/7db9b335-8148-446c-9e39-f31342dd78ca)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9d1e0e3f-61fc-49e9-a527-72ca23fbd15f)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4e69c19d-3b33-4fcf-8f66-0c65c0e4443c)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/fdd7d13a-c29b-4835-aa7d-9610f7b6403c)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/e098c9b3-31c9-4b01-b693-0e75c2cddd2d)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4cefbcb2-cbbb-4708-ac9d-6c40481794c0)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/1c48c17a-be81-4b97-a597-69d6b1543447)
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/041ee4e7-39d1-4639-bdd1-0c66a38c1b35)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/8bccc33c-a0dc-48be-a43e-0ed66a04c71c)
 
