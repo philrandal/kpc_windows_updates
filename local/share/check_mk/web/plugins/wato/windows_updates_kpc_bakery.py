@@ -35,7 +35,7 @@ from cmk.gui.valuespec import (
 
 def _valuespec_windows_updates_kpc():
     return DropdownChoice(
-        title=_('Windows Updates KPC'),
+        title=_('Windows Updates (KPC)'),
         help=_('This will deploy the agent plugin <tt>windows_updates_kpc.ps1</tt> '
                'for checking for available Windows Updates'),
         choices=[
