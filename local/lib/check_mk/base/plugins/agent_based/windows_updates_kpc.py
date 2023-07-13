@@ -33,7 +33,7 @@ from datetime import datetime, timedelta
 
 
 def discover_windows_updates_kpc(section):
-    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsinceminutes, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
+    for jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates in section:  
         yield Service(item=jobname_windows_updates_kpc)
 
 
@@ -66,7 +66,7 @@ def check_windows_updates_kpc(item, params, section):
         if len(line) < 18:
             continue  # Skip incomplete lines
 
-        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsinceminutes ,Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
+        jobname_windows_updates_kpc, Mandatorycount, Optionalcount, Criticalcount, Importantcount, Moderatecount, Lowcount, Unspecifiedcount, rebootrequired, rebootrequiredsince, rebootrequiredsincehours, Mandatoryupdates, Optionalupdates, Criticalupdates, Importantupdates, Lowupdates, Moderateupdates, Unspecifiedupdates = line[
             :18
         ]
 
@@ -82,6 +82,8 @@ def check_windows_updates_kpc(item, params, section):
             Lowupdates = ""
         if (Unspecifiedupdates  == "-"):
             Unspecifiedupdates = ""
+
+
 
         updatelist ="\n \n "
 
@@ -122,6 +124,7 @@ def check_windows_updates_kpc(item, params, section):
         statemoderate = " (OK)"
         statelow = " (OK)"
         stateunspecified = " (OK)"
+        statependingreboot = " (OK)"
 
 
         if int(Mandatorycount) >= int(mandatorywarn):
@@ -148,6 +151,13 @@ def check_windows_updates_kpc(item, params, section):
              stateunspecified = " (WARN)"
         if int(Unspecifiedcount) >= int(unspecifiedcrit):
              stateunspecified = " (CRIT)"
+        if int(rebootrequiredsincehours) > 0:
+             statependingreboot = " (OK, since " + rebootrequiredsincehours + " hours)"
+        if int(rebootrequiredsincehours) >= int(pendingrebootwarn):
+             statependingreboot = " (WARN, since " + rebootrequiredsincehours + " hours)"
+        if int(rebootrequiredsincehours) >= int(pendingrebootcrit):
+             statependingreboot = " (CRIT, since " + rebootrequiredsincehours + " hours)"
+
 
 
         if int(Mandatorycount) >= int(mandatorywarn) and state != State.CRIT and mandatoryenabled == 'Enabled':
@@ -174,7 +184,9 @@ def check_windows_updates_kpc(item, params, section):
              state = State.WARN
         if int(Unspecifiedcount) >= int(unspecifiedcrit) and unspecifiedenabled == 'Enabled':
              state = State.CRIT
-        if int(Unspecifiedcount) >= int(unspecifiedcrit) and unspecifiedenabled == 'Enabled':
+        if int(rebootrequiredsincehours) >= int(pendingrebootwarn) and state != State.CRIT and pendingrebootenabled == 'Enabled':
+             state = State.WARN
+        if int(rebootrequiredsincehours) >= int(pendingrebootcrit) and pendingrebootenabled == 'Enabled':
              state = State.CRIT
         if state != State.WARN and state != State.CRIT:
              state = State.OK
@@ -191,10 +203,14 @@ def check_windows_updates_kpc(item, params, section):
              statelow = " (OK)"
         if unspecifiedenabled == 'Disabled':
              stateunspecified = " (OK)"
+        if pendingrebootenabled == 'Disabled':
+             statependingreboot = " (OK)"
+        if pendingrebootenabled == 'Disabled' and int(rebootrequiredsincehours) > 0:
+             statependingreboot = " (OK, since " + rebootrequiredsincehours + " hours)"
 
 
 
-        summarytext= "Mandatory: " + Mandatorycount + statemandatory + ", Critical: " + Criticalcount + statecritical + ", Important: " + Importantcount + stateimportant + ", Moderate: " + Moderatecount + statemoderate + ", Low: " + Lowcount + statelow + ", Unspecified: " + Unspecifiedcount + stateunspecified 
+        summarytext= "Mandatory: " + Mandatorycount + statemandatory + ", Critical: " + Criticalcount + statecritical + ", Important: " + Importantcount + stateimportant + ", Moderate: " + Moderatecount + statemoderate + ", Low: " + Lowcount + statelow + ", Unspecified: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
         summarydetails = updatelist + Mandatoryupdates + Criticalupdates + Importantupdates + Moderateupdates + Lowupdates + Unspecifiedupdates + support
 
         yield Result(
