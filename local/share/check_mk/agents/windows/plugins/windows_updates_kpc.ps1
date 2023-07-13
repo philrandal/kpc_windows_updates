@@ -180,7 +180,7 @@ try
                 $Criticalupdates = $Criticalupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Criticalcount++
             }
-            if ($Update.MsrcSeverity -eq "Important")
+            if ($Update.MsrcSeverity -eq "Important" -or $Update.AutoSelectOnWebSites -eq "True")
             {
                 $Importantupdates = $Importantupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Importantcount++
@@ -195,7 +195,7 @@ try
                 $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
                 $Moderatecount++
             }
-            if ($Update.MsrcSeverity -eq $null)
+            if ($Update.MsrcSeverity -eq $null -or $Update.AutoSelectOnWebSites -eq "False")
             {
                 $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Unspecifiedcount++
