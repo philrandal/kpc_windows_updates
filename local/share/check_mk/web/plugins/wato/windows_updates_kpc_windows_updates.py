@@ -84,7 +84,7 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
                 ],
             )),  
             ("levels_important", Tuple(
-                title=_("Levels for pending updates with important severity"),
+                title=_("Levels for pending important updates or with important severity"),
                 elements=[
                     Integer(title=_("Warning at"), default_value=1),
                     Integer(title=_("Critical at"), default_value=6),
@@ -132,7 +132,7 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
                 ],
             )),
             ("levels_unspecified", Tuple(
-                title=_("Levels for pending updates with unspecified severity"),
+                title=_("Levels for pending optional updates or with unspecified severity"),
                 elements=[
                     Integer(title=_("Warning at"), default_value=1),
                     Integer(title=_("Critical at"), default_value=99),
