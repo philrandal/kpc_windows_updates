@@ -192,7 +192,7 @@ try
                 $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
                 $Moderatecount++
             }
-            if ($Update.MsrcSeverity -eq $null -or $Update.AutoSelectOnWebSites -eq "False")
+            if ($Update.MsrcSeverity -eq $null -or $Update.AutoSelectOnWebSites -ne "True")
             {
                 $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Unspecifiedcount++
