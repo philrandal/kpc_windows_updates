@@ -75,10 +75,10 @@ def check_windows_lastupdateinstalldate_kpc(item, params, section):
         summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + str(lastupdateinstalldays) + " days ago) / (warn: " + str(warn) + " / crit: " + str(crit) + ")"
         summarydetails = "Update History:" + lastupdatelist + support
        
-        if (int(updatehistorysearcherror) != 0):
+        if (updatehistorysearcherror != "0"):
             state=State.CRIT
             summarytext= str(updatehistorysearcherror)
-            summarydetails = ""
+            summarydetails = " "
             
         yield Result(
              state=state,
