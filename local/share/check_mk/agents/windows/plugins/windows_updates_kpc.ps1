@@ -126,6 +126,8 @@ try
     #Checking for available Windows Updates
     $Mandatorycount=0
     $Mandatoryupdates=""
+    $important1updates=""
+    $important1count=0
     $Optionalcount=0
     $Optionalupdates=""
     $Criticalcount=0
@@ -162,22 +164,27 @@ try
             $Updatetitle = $Update.Title
             $Updatetitle = $Updatetitle -replace "`n|`r"
 
+            if ($Update.AutoSelectOnWebSites -eq "True")
+            {
+                $important1updates = $important1updates + $Updatetitle + "XXXNEWLINEXXX"
+                $important1count++
+            }            
+            if ($Update.AutoSelectOnWebSites -ne "True")
+            {
+                $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
+                $Optionalcount++
+            }
             if ($Update.IsMandatory -eq 1)
             {
                 $Mandatoryupdates = $Mandatoryupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Mandatorycount++
-            }
-            if ($Update.IsMandatory -eq 0)
-            {
-                $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
-                $Optionalcount++
             }
             if ($Update.MsrcSeverity -eq "Critical")
             {
                 $Criticalupdates = $Criticalupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Criticalcount++
             }
-            if ($Update.MsrcSeverity -eq "Important" -or $Update.AutoSelectOnWebSites -eq "True")
+            if ($Update.MsrcSeverity -eq "Important")
             {
                 $Importantupdates = $Importantupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Importantcount++
@@ -192,7 +199,7 @@ try
                 $Moderateupdates = $Moderateupdates + $Updatetitle  + "XXXNEWLINEXXX"
                 $Moderatecount++
             }
-            if ($Update.MsrcSeverity -eq $null -or $Update.AutoSelectOnWebSites -ne "True")
+            if ($Update.MsrcSeverity -eq $null)
             {
                 $Unspecifiedupdates = $Unspecifiedupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Unspecifiedcount++
@@ -227,10 +234,11 @@ try
         $Unspecifiedupdates = "-"
     }
 
-
+   
+    
     $outputwindowsupdates = "<<<windows_updates_kpc:sep(9):encoding(cp437)>>>`n"
     $jobname_windows_updates_kpc = "Windows Updates"
-    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinchours" + "`t" + "$updatesearcherror" + "`t" +  "$Mandatoryupdates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
+    $outputwindowsupdates = "$outputwindowsupdates" + "$jobname_windows_updates_kpc" + "`t" + "$Mandatorycount" + "`t" + "$important1count" +  "`t" + "$Optionalcount" + "`t" + "$Criticalcount" + "`t" + "$Importantcount" + "`t" + "$Moderatecount" + "`t" + "$Lowcount" + "`t" + "$Unspecifiedcount" + "`t" + "$rebootrequired" + "`t" + "$rebootrequiredsince" + "`t" +  "$rebootrequiredsinchours" + "`t" + "$updatesearcherror" + "`t" +  "$Mandatoryupdates" + "`t" + "$important1updates" + "`t" + "$Optionalupdates" + "`t" + "$Criticalupdates" + "`t" + "$Importantupdates" + "`t" + "$Lowupdates" + "`t" + "$Moderateupdates" + "`t" + "$Unspecifiedupdates"
     $outputwindowsupdates = $outputwindowsupdates
     write-host "$outputwindowsupdates"
 }
