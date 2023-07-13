@@ -61,15 +61,15 @@ try
     $rebootrequiredsinchours = "0"
     }
 
-    #Checking for Datetime when the last update was installed and Show the Update History of the last 50 Updates
+    #Checking for Datetime when the last update was installed and Show the Update History of the last 80 Updates
     $lastupdatelist=""
+    $lastupdatelistcounter=0
+    $lastupdateinstalldate=""
 
-
-    $lastupdateinstalldate=@{}
+    #$lastupdateinstalldate=@{}
     $Session = New-Object -ComObject Microsoft.Update.Session
     $Searcher = $Session.CreateUpdateSearcher()
-    $lastupdateinstalldate = $Searcher.QueryHistory(1,1) | select -ExpandProperty Date
-    $updatehistory = $Searcher.QueryHistory(1,70)
+    $updatehistory = $Searcher.QueryHistory(0,1000)
 
 
     if ($updatehistory -and $updatehistory.count -gt 0)
@@ -77,9 +77,14 @@ try
     
         foreach ($lastupdate in $updatehistory)
         {
-            if ($lastupdate.Date -and $lastupdate.Title)
+            if ($lastupdate.Date -and $lastupdate.Title -and $lastupdate.Title -notlike "*Intelligence-Update*" -and $lastupdate.Title -notlike "*Intelligence Update*" -and $lastupdatelistcounter -lt 80 )
             {
                 $lastupdatelist = $lastupdatelist + $lastupdate.Date + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+                if($lastupdateinstalldate -eq "")
+                {
+                    $lastupdateinstalldate = $lastupdate.Date
+                }
+                $lastupdatelistcounter++
             }
         }
     }
