@@ -47,6 +47,38 @@ from cmk.gui.plugins.wato.datasource_programs import RulespecGroupDatasourceProg
 def _parameter_valuespec_windows_updates_kpc_windows_updates():
     return Dictionary(
         elements=[
+            ("levels_important1", Tuple(
+                title=_("Levels for pending important updates"),
+                elements=[
+                    Integer(title=_("Warning at"), default_value=1),
+                    Integer(title=_("Critical at"), default_value=1),
+                    DropdownChoice(
+                        title = _("Check Enabled"),
+                        help = _('default is Check Enabled'),
+                        choices = [
+                            ( "Enabled",  _("Check enabled") ),
+                            ( "Disabled", _("Check disabled (always be OK)") ),                           
+                        ],
+                        default_value = "Enabled",
+                    ),
+                ],
+            )),
+            ("levels_optional", Tuple(
+                title=_("Levels for pending optional updates"),
+                elements=[
+                    Integer(title=_("Warning at"), default_value=1),
+                    Integer(title=_("Critical at"), default_value=1),
+                    DropdownChoice(
+                        title = _("Check Enabled"),
+                        help = _('default is Check Enabled'),
+                        choices = [
+                            ( "Enabled",  _("Check enabled") ),
+                            ( "Disabled", _("Check disabled (always be OK)") ),                           
+                        ],
+                        default_value = "Enabled",
+                    ),
+                ],
+            )),
             ("levels_mandatory", Tuple(
                 title=_("Levels for pending updates with mandatory severity"),
                 elements=[
@@ -80,7 +112,7 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
                 ],
             )),  
             ("levels_important", Tuple(
-                title=_("Levels for pending important updates or with important severity"),
+                title=_("Levels for pending updates with important severity"),
                 elements=[
                     Integer(title=_("Warning at"), default_value=1),
                     Integer(title=_("Critical at"), default_value=6),
@@ -128,7 +160,7 @@ def _parameter_valuespec_windows_updates_kpc_windows_updates():
                 ],
             )),
             ("levels_unspecified", Tuple(
-                title=_("Levels for pending optional updates or with unspecified severity"),
+                title=_("Levels for pending updates with unspecified severity"),
                 elements=[
                     Integer(title=_("Warning at"), default_value=1),
                     Integer(title=_("Critical at"), default_value=99),
