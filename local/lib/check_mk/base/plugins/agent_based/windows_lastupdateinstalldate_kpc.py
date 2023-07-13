@@ -37,7 +37,7 @@ from datetime import datetime, timedelta
 
 
 def discover_windows_lastupdateinstalldate_kpc(section):
-    for jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist in section:  
+    for jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, updatehistorysearcherror, lastupdatelist in section:  
         yield Service(item=jobname_windows_lastupdateinstalldate_kpc)
 
 
@@ -47,11 +47,11 @@ def check_windows_lastupdateinstalldate_kpc(item, params, section):
     crit = params["warning_lower"][1]
 
     for line in section:
-        if len(line) < 4:
+        if len(line) < 5:
             continue  # Skip incomplete lines
 
-        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, lastupdatelist = line[
-            :4
+        jobname_windows_lastupdateinstalldate_kpc, lastupdateinstalldate, lastupdateinstalldays, updatehistorysearcherror, lastupdatelist = line[
+            :5
         ]
 
         if (lastupdatelist == "-"):
@@ -74,7 +74,12 @@ def check_windows_lastupdateinstalldate_kpc(item, params, section):
 
         summarytext= "Last installation of Windows Updates: " + lastupdateinstalldate + " (" + str(lastupdateinstalldays) + " days ago) / (warn: " + str(warn) + " / crit: " + str(crit) + ")"
         summarydetails = "Update History:" + lastupdatelist + support
-
+       
+        if (int(updatehistorysearcherror) != 0):
+            state=State.CRIT
+            summarytext= str(updatehistorysearcherror)
+            summarydetails = ""
+            
         yield Result(
              state=state,
              summary=f"{summarytext}",
