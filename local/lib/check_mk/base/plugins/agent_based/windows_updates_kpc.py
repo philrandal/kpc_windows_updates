@@ -213,10 +213,10 @@ def check_windows_updates_kpc(item, params, section):
         summarytext= "Mandatory: " + Mandatorycount + statemandatory + ", Critical: " + Criticalcount + statecritical + ", Important: " + Importantcount + stateimportant + ", Moderate: " + Moderatecount + statemoderate + ", Low: " + Lowcount + statelow + ", Unspecified: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
         summarydetails = updatelist + Mandatoryupdates + Criticalupdates + Importantupdates + Moderateupdates + Lowupdates + Unspecifiedupdates + support
 
-        if (int(updatesearcherror) != 0):
+        if (updatesearcherror) != "0"):
             state=State.CRIT
             summarytext= str(updatesearcherror)
-            summarydetails = ""
+            summarydetails = " "
 
         
         yield Result(
