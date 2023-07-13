@@ -44,9 +44,11 @@ try
     
     try
     {
-        $Session = New-Object -ComObject Microsoft.Update.Session
-        $Searcher = $Session.CreateUpdateSearcher
-        $updatehistory = $Searcher.QueryHistory(0,1000)
+       #$lastupdateinstalldate=@{}
+       $Session = New-Object -ComObject Microsoft.Update.Session
+       $Searcher = $Session.CreateUpdateSearcher()
+       #$lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
+       $updatehistory = $Searcher.QueryHistory(0,1000)
     }
     catch
     {
