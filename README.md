@@ -48,5 +48,8 @@ Features:
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/8bccc33c-a0dc-48be-a43e-0ed66a04c71c)
 
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9b979558-cc79-493b-b4b0-3f3867bd1e4a)
+
+
 
 
