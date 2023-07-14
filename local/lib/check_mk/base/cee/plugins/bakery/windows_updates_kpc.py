@@ -29,7 +29,7 @@ def get_windows_updates_kpc_files(conf: Dict[str, Any]) -> FileGenerator:
             base_os=OS.WINDOWS,
             source=Path("windows_updates_kpc.ps1"),
             interval=10800,
-            timeout=600,
+            timeout=3600,
             asynchronous=True)
 
 register.bakery_plugin(
