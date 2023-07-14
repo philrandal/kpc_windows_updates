@@ -264,6 +264,8 @@ def check_windows_updates_kpc(item, params, section):
             summarytext = summarytext + "Unspecified Severity: " + Unspecifiedcount + stateunspecified + ", "   
         if(rebootrequired == "Yes"):
             summarytext = summarytext + "Pending reboot: " + rebootrequired + statependingreboot
+        if(summarytext == ""):
+            summarytext = "No updates available, no pending reboot"
 
         summarydetailsoverview = "Important Updates: " + important1count + stateimportant1 + "\n " + "Optional Updates: " + Optionalcount + stateoptional + "\n " + "Mandatory Severity: " + Mandatorycount + statemandatory + "\n " + "Critical Severity: " + Criticalcount + statecritical + "\n "   + "Important Severity: " + Importantcount + stateimportant + "\n " + "Moderate Severity: " + Moderatecount + statemoderate + "\n " + "Low Severity: " + Lowcount + statelow + "\n " + "Unspecified Severity: " + Unspecifiedcount + stateunspecified + "\n " + "Pending reboot: " + rebootrequired + statependingreboot     
 
