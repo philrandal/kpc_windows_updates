@@ -87,6 +87,10 @@ def check_windows_updates_kpc(item, params, section):
             Lowupdates = ""
         if (Unspecifiedupdates  == "-"):
             Unspecifiedupdates = ""
+        if (rebootrequiredsincehours  == "99999"):
+             rebootrequiredsincehoursstate = "?"
+        else:
+             rebootrequiredsincehoursstate = rebootrequiredsincehours
 
 
 
@@ -174,11 +178,11 @@ def check_windows_updates_kpc(item, params, section):
         if int(Unspecifiedcount) >= int(unspecifiedcrit):
              stateunspecified = " (CRIT)"
         if int(rebootrequiredsincehours) > 0:
-             statependingreboot = " (OK, since " + rebootrequiredsincehours + " hours)"
+             statependingreboot = " (OK, since " + rebootrequiredsincehoursstate + " hours)"
         if int(rebootrequiredsincehours) >= int(pendingrebootwarn):
-             statependingreboot = " (WARN, since " + rebootrequiredsincehours + " hours)"
+             statependingreboot = " (WARN, since " + rebootrequiredsincehoursstate + " hours)"
         if int(rebootrequiredsincehours) >= int(pendingrebootcrit):
-             statependingreboot = " (CRIT, since " + rebootrequiredsincehours + " hours)"
+             statependingreboot = " (CRIT, since " + rebootrequiredsincehoursstate + " hours)"
 
         
         if int(important1count) >= int(important1warn) and state != State.CRIT and important1enabled == 'Enabled':
@@ -242,7 +246,7 @@ def check_windows_updates_kpc(item, params, section):
         if pendingrebootenabled == 'Disabled':
              statependingreboot = " (OK)"
         if pendingrebootenabled == 'Disabled' and int(rebootrequiredsincehours) > 0:
-             statependingreboot = " (OK, since " + rebootrequiredsincehours + " hours)"
+             statependingreboot = " (OK, since " + rebootrequiredsincehoursstate + " hours)"
 
         summarytext = ""
         
