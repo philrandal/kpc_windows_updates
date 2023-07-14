@@ -33,7 +33,7 @@ Features:
 ### Added default Agent execution Settings for the Windows Agent Plugin (Agent Bakery): ###
 - Default cache interval of 3 Hours
 - Default asynchronous execution
-- Default execution timeout of 600 Seconds
+- Default execution timeout of 1 hours (long time needet for some older systems sometimes)
 
 ### Screenshots: ###
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9d1e0e3f-61fc-49e9-a527-72ca23fbd15f)
