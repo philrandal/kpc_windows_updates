@@ -244,9 +244,28 @@ def check_windows_updates_kpc(item, params, section):
         if pendingrebootenabled == 'Disabled' and int(rebootrequiredsincehours) > 0:
              statependingreboot = " (OK, since " + rebootrequiredsincehours + " hours)"
 
+        summarytext = ""
+        
+        if(important1count != "0"):
+            summarytext = summarytext + "Important Updates: " + important1count + stateimportant1 + ", "
+        if(Optionalcount != "0"):
+            summarytext = summarytext + "Optional Updates: " + Optionalcount + stateoptional + ", "
+        if(Mandatorycount != "0"):
+            summarytext = summarytext + "Mandatory Severity: " + Mandatorycount + statemandatory + ", "            
+        if(Criticalcount != "0"):
+            summarytext = summarytext + "Critical Severity: " + Criticalcount + statecritical + ", "      
+        if(Importantcount != "0"):
+            summarytext = summarytext + "Important Severity: " + Importantcount + stateimportant + ", "   
+        if(Moderatecount != "0"):
+            summarytext = summarytext + "Moderate Severity: " + Moderatecount + statemoderate + ", "   
+        if(Lowcount != "0"):
+            summarytext = summarytext + "Low Severity: " + Lowcount + statelow + ", "   
+        if(Unspecifiedcount != "0"):
+            summarytext = summarytext + "Unspecified Severity: " + Unspecifiedcount + stateunspecified + ", "   
+        if(rebootrequired == "Yes"):
+            summarytext = summarytext + "Pending reboot: " + rebootrequired + statependingreboot          
 
-
-        summarytext= "Important Updates: " + important1count + stateimportant1 + ", Optional Updates: " + Optionalcount + stateoptional + ", Mandatory Severity: " + Mandatorycount + statemandatory + ", Critical Severity: " + Criticalcount + statecritical + ", Important Severity: " + Importantcount + stateimportant + ", Moderate Severity: " + Moderatecount + statemoderate + ", Low Severity: " + Lowcount + statelow + ", Unspecified Severity: " + Unspecifiedcount + stateunspecified + ", Pending reboot: " + rebootrequired + statependingreboot
+        #summarytext = summarytext
         summarydetails = updatelist + important1updates + Optionalupdates + Mandatoryupdates + Criticalupdates + Importantupdates + Moderateupdates + Lowupdates + Unspecifiedupdates + support
 
         if (updatesearcherror != "0"):
