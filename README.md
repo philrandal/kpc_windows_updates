@@ -14,7 +14,7 @@ https://github.com/matthias1232/kpc_windows_updates/releases
 ### Windows Update Checks for CheckMK ###
  
 Features:
-- Check for available Windows Updates (Important and Optional)
+- Check for available Windows Updates (Important and Optional, intelligence updates will be shown under optional updates)
 - Checking for available Windows Updates sorted by Severity
 - Individual WARN/CRIT Level settings for each type of Updates (Mandatory, Critical, Important, Moderate, Low, Unspecified Severity)
 - Pending Reboot Check after Update Installation with WARN/CRIT Level Settings
