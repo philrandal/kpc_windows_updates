@@ -164,12 +164,12 @@ try
             $Updatetitle = $Update.Title
             $Updatetitle = $Updatetitle -replace "`n|`r"
 
-            if ($Update.AutoSelectOnWebSites -eq "True")
+            if ($Update.AutoSelectOnWebSites -eq "True" -and $Update.Title -notlike "*Intelligence-Update*" -and $Update.Title -notlike "*Intelligence Update*")
             {
                 $important1updates = $important1updates + $Updatetitle + "XXXNEWLINEXXX"
                 $important1count++
             }            
-            if ($Update.AutoSelectOnWebSites -ne "True")
+            if ($Update.AutoSelectOnWebSites -ne "True" -or $Update.Title -like "*Intelligence-Update*" -or $Update.Title -like "*Intelligence Update*")
             {
                 $Optionalupdates = $Optionalupdates + $Updatetitle + "XXXNEWLINEXXX"
                 $Optionalcount++
