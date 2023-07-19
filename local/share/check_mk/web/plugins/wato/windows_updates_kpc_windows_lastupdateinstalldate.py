@@ -35,7 +35,9 @@ from cmk.gui.valuespec import (
     TextInput,
     Age,
     ListOfStrings,
-    DropdownChoice, 
+    DropdownChoice,
+    Tuple,
+    Integer,
 )
 
 # import structure where special agent will be registered
