@@ -49,7 +49,7 @@ plugins:
       timeout     : 3600
 ````
 ### Screenshots: ###
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9d1e0e3f-61fc-49e9-a527-72ca23fbd15f)
+![image](https://github.com/user-attachments/assets/b975f5aa-b6de-477d-9445-d2bf5509fe26)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/fdd7d13a-c29b-4835-aa7d-9610f7b6403c)
 
@@ -63,7 +63,8 @@ plugins:
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9b979558-cc79-493b-b4b0-3f3867bd1e4a)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/d626ee0e-5c96-465a-baa2-f2ed869ec210)
+![image](https://github.com/user-attachments/assets/678f5be5-385a-4184-9ace-47743a4d58d4)
+
 
 
 
