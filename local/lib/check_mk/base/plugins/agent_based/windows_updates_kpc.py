@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
-# Copyright (C) 2023 K&P Computer Service- und Vertriebs-GmbH - All Rights Reserved
-# Unauthorized copying of this file, via any medium is strictly prohibited
-# Proprietary and confidential
+#This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the #License, or (at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU #General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
 # Written by Matthias Binder m.binder@kpc.de, July 2023
 #
 ################################################################################################################
+#
+# Author: K&P Computer Service- und Vertriebs-GmbH
+# Author: Matthias Binder
+# License: GNU General Public License
+# License Changed to GPL: 11/2024
+#
+# 
 # For Support and Sales Please Contact K&P Computer!
 #
 # E-Mail: hds@kpc.de
@@ -128,8 +138,9 @@ def check_windows_updates_kpc(item, params, section):
              Unspecifiedupdates = Unspecifiedupdates.replace("XXXNEWLINEXXX", "\n")
              Unspecifiedupdates = "Unspecified Severity: \n \n" + Unspecifiedupdates
 
-        support = "\n \n \n For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
+        #support = "\n \n \n For Support and Sales Please Contact K&P Computer! \n \n E-Mail: hds@kpc.de \n \n 24/7 Helpdesk-Support: \n International: +800 4479 3300 \n Germany: +49 6122 7071 330 \n Austria: +43 1 525 1833 \n\n Web Germany: https://www.kpc.de \n Web Austria: https://www.kpc.at \n Web International: https://www.kpc.de/en"
 
+        support = ""
 
         if jobname_windows_updates_kpc != item:
             continue  # Skip not matching lines
@@ -291,7 +302,7 @@ def check_windows_updates_kpc(item, params, section):
 
 register.check_plugin(
     name = "windows_updates_kpc",
-    service_name = "KPC %s",
+    service_name = "%s",
     discovery_function = discover_windows_updates_kpc,
     check_function = check_windows_updates_kpc,
     check_default_parameters={'levels_important1' : (1,1,'Enabled'),'levels_optional' : (1,99,'Enabled'),'levels_mandatory' : (1,1,'Disabled'),'levels_critical' : (1,1,'Disabled'),'levels_important' : (1,6,'Disabled'),'levels_moderate' : (1,10,'Disabled'),'levels_low' : (1,99,'Disabled'),'levels_unspecified' : (1,99,'Disabled'),'levels_pendingreboot' : (48,96,'Enabled')},
