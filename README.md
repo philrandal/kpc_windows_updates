@@ -35,6 +35,19 @@ Features:
 - Default asynchronous execution
 - Default execution timeout of 1 hour (long time needet for some older systems sometimes)
 
+If you are not using the CheckMK agent bakery or if you are working with CheckMK Raw Edition, apply the following Settings to your check_cmk.user.yml
+
+%ProgramData%\checkmk\agent\check_mk.user.yml
+````
+plugins:
+    enabled: yes
+    execution:
+    - pattern     : '$CUSTOM_PLUGINS_PATH$\windows_updates_kpc.ps1'
+      async       : yes
+      run         : yes
+      cache_age   : 3600
+      timeout     : 3600
+````
 ### Screenshots: ###
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/9d1e0e3f-61fc-49e9-a527-72ca23fbd15f)
 
