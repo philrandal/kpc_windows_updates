@@ -118,6 +118,7 @@ try
             $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
             $rebootrequiredsinchours = $rebootrequiredsinchours.TotalHours
             $rebootrequiredsinchours = [Math]::Truncate($rebootrequiredsinchours)
+            $rebootrequiredsince = $rebootrequiredsince.tostring("yyyy-MM-dd hh:mm:ss")
         }
         else
         {
