@@ -175,7 +175,12 @@ try
             $Updatetitle = $Update.Title
             $Updatetitle = $Updatetitle -replace "`n|`r"
 
-            if ($Update.AutoSelectOnWebSites -eq "True" -and $Update.Title -notlike "*Intelligence[ -]Update*")
+            # skip Defender Intelligence Updates
+            if ($Update.Title -like "*Intelligence[ -]Update*")
+            {
+                continue
+            }
+            if ($Update.AutoSelectOnWebSites -eq "True")
             {
                 $important1updates = $important1updates + $Updatetitle + "XXXNEWLINEXXX"
                 $important1count++
