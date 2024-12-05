@@ -6,7 +6,7 @@
 
 ### Available .mkp Package Releases: ###
 
-https://github.com/matthias1232/kpc_windows_updates/releases
+https://github.com/philrandal/kpc_windows_updates/releases
 
 
 ----------------------
