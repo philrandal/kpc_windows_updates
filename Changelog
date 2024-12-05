@@ -1,0 +1,5 @@
+2024-12-05 - Release 1.0.3
+             Completely ignore Defender Intellignce Updates
+             Fix bakery component to not error on CMK Raw installations
+             Change date formats to yyyy-MM-dd hh:mm:ss for unabiguous date reporting
+             
