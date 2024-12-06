@@ -53,7 +53,7 @@ plugins:
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/fdd7d13a-c29b-4835-aa7d-9610f7b6403c)
 
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/e098c9b3-31c9-4b01-b693-0e75c2cddd2d)
+![image](https://github.com/user-attachments/assets/fe48b89b-daed-42d6-aa34-2d7ed5301c03)
 
 ![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/4cefbcb2-cbbb-4708-ac9d-6c40481794c0)
 
@@ -71,7 +71,7 @@ plugins:
 
 
 
-![image](https://github.com/user-attachments/assets/fe48b89b-daed-42d6-aa34-2d7ed5301c03)
 
+![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/e098c9b3-31c9-4b01-b693-0e75c2cddd2d)
 
 
