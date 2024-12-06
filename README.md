@@ -68,10 +68,3 @@ plugins:
 ![image](https://github.com/user-attachments/assets/f884a80a-19ed-49dc-be54-cbc7c5e0e142)
 
 ![image](https://github.com/user-attachments/assets/2d6a9a94-c184-4670-ae95-b9fdfd4ce1c8)
-
-
-
-
-![image](https://github.com/matthias1232/kpc_windows_updates/assets/5358267/e098c9b3-31c9-4b01-b693-0e75c2cddd2d)
-
-
