@@ -34,9 +34,40 @@ $pswindow = $pshost.ui.rawui
 
 $newsize = $pswindow.buffersize
 $newsize.height = 300
-$newsize.width = 150
+$newsize.width = 200
 $pswindow.buffersize = $newsize
+
+$newsize = $pswindow.windowsize
+$newsize.width = 200
+$pswindow.windowsize = $newsize
+
 $now = Get-Date
+
+# config file directory
+$MK_CONFDIR = $env:MK_CONFDIR
+
+# Fallback if no MK_CONFDIR is set
+if (!$MK_CONFDIR) {
+    $MK_CONFDIR= "$env:ProgramData\checkmk\agent\config"
+}
+
+# Read the config file - attention this is no source of the file as it needs to be read in UTF-8
+$CONFIG_FILE="${MK_CONFDIR}\windows_updates_kpc.cfg"
+if (test-path -path "${CONFIG_FILE}" ) {
+    $values = Get-Content -Path "${CONFIG_FILE}" -Encoding UTF8 | Out-String | ConvertFrom-StringData
+    $filterstring = $values.filterstring.split("|")
+    $updatecount = $values.updatecount
+}
+
+# If no config file is loaded use the default settings
+if (!$updatecount) {
+    $updatecount = 40
+}
+
+if (!$filterstring) {
+    $filterstring = @('######')
+}
+[regex] $filter_regex ='(?i)^(' + (($filterstring |ForEach-Object {[regex]::escape($_)}) -join "|") + ')'
 
 
 try
@@ -44,7 +75,6 @@ try
 
     #Checking for Datetime when the last update was installed and Show the Update History of the last 80 Updates
     $lastupdatelist=""
-    $lastupdatelistcounter=0
     $lastupdateinstalldate=""
     $updatehistorysearcherror=0
     #$lastupdateinstalldate=@{}
@@ -55,8 +85,12 @@ try
        #$lastupdateinstalldate=@{}
        $Session = New-Object -ComObject Microsoft.Update.Session
        $Searcher = $Session.CreateUpdateSearcher()
+       $HistoryCount = $Searcher.GetTotalHistoryCount()
        #$lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
-       $updatehistory = $Searcher.QueryHistory(0,1000)
+       $updatehistory = $Searcher.QueryHistory(0,$HistoryCount) `
+           | Where-Object { $_.title -notmatch $filter_regex -AND $_.title -ne $null } `
+           | Sort-Object date -desc `
+           | Select-Object -First $updatecount 
     }
     catch
     {
@@ -70,14 +104,13 @@ try
     
         foreach ($lastupdate in $updatehistory)
         {
-            if ($lastupdate.Date -and $lastupdate.Title -and $lastupdate.Title -notlike "*Intelligence[ -]Update*" -and $lastupdatelistcounter -lt 80 )
+            if ($lastupdate.Date)
             {
                 $lastupdatelist = $lastupdatelist + $lastupdate.Date.tostring("yyyy-MM-dd hh:mm:ss") + " " + $lastupdate.Title + "XXXNEWLINEXXX"
                 if($lastupdateinstalldate -eq "")
                 {
                     $lastupdateinstalldate = $lastupdate.Date
                 }
-                $lastupdatelistcounter++
             }
         }
     }
@@ -174,9 +207,8 @@ try
         {
             $Updatetitle = $Update.Title
             $Updatetitle = $Updatetitle -replace "`n|`r"
-
-            # skip Defender Intelligence Updates
-            if ($Update.Title -like "*Intelligence[ -]Update*")
+            # filter out specified updates
+            if ($Update.title -eq $null -or $Update.title -match $filter_regex)
             {
                 continue
             }
