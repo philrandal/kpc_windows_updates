@@ -106,7 +106,7 @@ try
         {
             if ($lastupdate.Date)
             {
-                $lastupdatelist = $lastupdatelist + $lastupdate.Date.tostring("yyyy-MM-dd hh:mm:ss") + " " + $lastupdate.Title + "XXXNEWLINEXXX"
+                $lastupdatelist = $lastupdatelist + $lastupdate.Date.tostring("yyyy-MM-dd HH:mm:ss") + " " + $lastupdate.Title + "XXXNEWLINEXXX"
                 if($lastupdateinstalldate -eq "")
                 {
                     $lastupdateinstalldate = $lastupdate.Date
@@ -119,7 +119,7 @@ try
     {
         $lastupdateinstalldays = New-TimeSpan -Start $lastupdateinstalldate -End $now
         $lastupdateinstalldays = $lastupdateinstalldays.Days
-        $lastupdateinstalldate = $lastupdateinstalldate.tostring("yyyy-MM-dd hh:mm:ss")
+        $lastupdateinstalldate = $lastupdateinstalldate.tostring("yyyy-MM-dd HH:mm:ss")
     }
     else
     {
@@ -151,7 +151,7 @@ try
             $rebootrequiredsinchours = New-TimeSpan -Start $rebootrequiredsince -End $now
             $rebootrequiredsinchours = $rebootrequiredsinchours.TotalHours
             $rebootrequiredsinchours = [Math]::Truncate($rebootrequiredsinchours)
-            $rebootrequiredsince = $rebootrequiredsince.tostring("yyyy-MM-dd hh:mm:ss")
+            $rebootrequiredsince = $rebootrequiredsince.tostring("yyyy-MM-dd HH:mm:ss")
         }
         else
         {
