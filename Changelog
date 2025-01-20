@@ -1,3 +1,5 @@
+2025-01-20 - Handle zero installed updates better
+
 2024-12-12 - Fix time formats in Powershell plugin to use 24-hour format, not 12-hour
 
 2024-12-11 - Add config file for Powershell plugin to specify patch exclusion filter and number of installed patches to list
