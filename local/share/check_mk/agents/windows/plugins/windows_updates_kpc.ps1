@@ -77,6 +77,7 @@ try
     $lastupdatelist=""
     $lastupdateinstalldate=""
     $updatehistorysearcherror=0
+    $updatehistory-$null
     #$lastupdateinstalldate=@{}
 
     
@@ -87,10 +88,12 @@ try
        $Searcher = $Session.CreateUpdateSearcher()
        $HistoryCount = $Searcher.GetTotalHistoryCount()
        #$lastupdateinstalldate = $Searcher.QueryHistory(0,1) | select -ExpandProperty Date
-       $updatehistory = $Searcher.QueryHistory(0,$HistoryCount) `
-           | Where-Object { $_.title -notmatch $filter_regex -AND $_.title -ne $null } `
-           | Sort-Object date -desc `
-           | Select-Object -First $updatecount 
+       if ($HistoryCount -gt 0) {
+           $updatehistory = $Searcher.QueryHistory(0,$HistoryCount) `
+               | Where-Object { $_.title -notmatch $filter_regex -AND $_.title -ne $null } `
+               | Sort-Object date -desc `
+               | Select-Object -First $updatecount 
+       }
     }
     catch
     {
