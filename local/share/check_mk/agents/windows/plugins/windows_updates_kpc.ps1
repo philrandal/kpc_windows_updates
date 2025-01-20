@@ -77,7 +77,7 @@ try
     $lastupdatelist=""
     $lastupdateinstalldate=""
     $updatehistorysearcherror=0
-    $updatehistory-$null
+    $updatehistory=$null
     #$lastupdateinstalldate=@{}
 
     
