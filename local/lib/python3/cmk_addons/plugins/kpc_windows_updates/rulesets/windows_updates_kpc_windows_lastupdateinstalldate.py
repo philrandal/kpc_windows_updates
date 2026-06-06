@@ -31,41 +31,43 @@
 #
 ################################################################################################################
 
-from cmk.gui.i18n import _
-from cmk.gui.plugins.wato import (
-   HostRulespec,
-   rulespec_registry,
+from cmk.rulesets.v1 import Title
+from cmk.rulesets.v1.form_specs import (
+    DefaultValue,
+    DictElement,
+    Dictionary,
+    InputHint,
+    Integer,
+    Float,
+    LevelDirection,
+    LevelsType,
+    SimpleLevels,
+    SimpleLevelsConfigModel,
 )
-try:
-    from cmk.gui.cee.plugins.wato.agent_bakery.rulespecs.utils import (
-        RulespecGroupMonitoringAgentsAgentPlugins
-    )
-except Exception:
-    RulespecGroupMonitoringAgentsAgentPlugins = None
+from cmk.rulesets.v1.rule_specs import CheckParameters, HostCondition, Topic
 
-from cmk.gui.valuespec import (
-   Age,
-   Dictionary,
-   TextAscii,
-   DropdownChoice,
+
+
+ 
+def _parameter_form_windows_updates_kpc_windows_lastupdateinstalldate() -> Dictionary:
+    return Dictionary(
+        elements={
+            "warning_lower": DictElement[SimpleLevelsConfigModel[int]](
+                required=False,
+                parameter_form=SimpleLevels(
+                    title=Title("Levels on Windows Last Updates installed days ago"),
+                    level_direction=LevelDirection.UPPER,
+                    form_spec_template=Integer(),
+                    prefill_fixed_levels=InputHint(value=(30, 50)),
+                ),
+            ),
+        }
+    )
+        
+rule_spec_windows_updates_kpc_windows_lastupdateinstalldate = CheckParameters(
+    name="windows_updates_kpc_windows_lastupdateinstalldate",
+    topic=Topic.WINDOWS,
+    parameter_form=_parameter_form_windows_updates_kpc_windows_lastupdateinstalldate,
+    title=Title("Windows Updates History"),
+    condition=HostCondition(),
 )
-
-def _valuespec_windows_updates_kpc():
-    return DropdownChoice(
-        title=_('Windows Updates (Agent Plugin)'),
-        help=_('This will deploy the agent plugin <tt>windows_updates_kpc.ps1</tt> '
-               'for checking for available Windows Updates'),
-        choices=[
-            (True, _('Deploy plugin for Windows Updates')),
-            (None, _('Do not deploy plugin for Windows Updates')),
-        ],
-    )
-
-
-if RulespecGroupMonitoringAgentsAgentPlugins is not None:
-    rulespec_registry.register(
-       HostRulespec(
-          group=RulespecGroupMonitoringAgentsAgentPlugins,
-          name="agent_config:windows_updates_kpc",
-          valuespec=_valuespec_windows_updates_kpc,
-       ))
