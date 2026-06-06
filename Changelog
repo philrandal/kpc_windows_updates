@@ -8,3 +8,5 @@
              Completely ignore Defender Intelligence Updates
              Fix bakery component to not error on CMK Raw installations
              Change date formats to yyyy-MM-dd hh:mm:ss for unambiguous date reporting
+
+2026-06-06 - Sync changes from upstream release 1.0.6
